@@ -14,6 +14,7 @@ class SotoSoundManager {
     this.masterGain = null;
     this.musicGain = null;
     this.unlocked = false;
+    this.silentAudio = null;
 
     // Load saved sound preference
     try {
@@ -24,6 +25,36 @@ class SotoSoundManager {
     } catch (e) {}
   }
 
+  // Force iOS Safari onto the media playback channel (bypasses physical Silent switch)
+  enableMediaChannel() {
+    if ('audioSession' in navigator) {
+      try {
+        navigator.audioSession.type = 'playback';
+      } catch (e) {}
+    }
+
+    if (!this.silentAudio && typeof document !== 'undefined') {
+      try {
+        const audio = document.createElement('audio');
+        audio.setAttribute('x-webkit-airplay', 'deny');
+        audio.setAttribute('playsinline', 'true');
+        audio.setAttribute('loop', 'true');
+        // Clean 1-second silent WAV
+        audio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+        audio.style.display = 'none';
+        document.body.appendChild(audio);
+        this.silentAudio = audio;
+      } catch (e) {}
+    }
+
+    if (this.silentAudio && this.silentAudio.paused) {
+      try {
+        const p = this.silentAudio.play();
+        if (p !== undefined) p.catch(() => {});
+      } catch (e) {}
+    }
+  }
+
   // Initialize audio context and unlock mobile web audio
   init() {
     if (!this.ctx) {
@@ -31,11 +62,11 @@ class SotoSoundManager {
       if (AudioCtx) {
         this.ctx = new AudioCtx();
         this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
+        this.masterGain.gain.value = this.isMuted ? 0 : 1;
         this.masterGain.connect(this.ctx.destination);
 
         this.musicGain = this.ctx.createGain();
-        this.musicGain.gain.setValueAtTime(0.26, this.ctx.currentTime); // Warm ambient level
+        this.musicGain.gain.value = 0.65; // Rich & clear for mobile speakers
         this.musicGain.connect(this.masterGain);
       }
     }
@@ -60,6 +91,8 @@ class SotoSoundManager {
   // Single control: Toggle both sound and Indonesian background song
   toggleAll() {
     this.init();
+    this.enableMediaChannel();
+
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume().catch(() => {});
     }
@@ -68,14 +101,20 @@ class SotoSoundManager {
       // Turn off
       this.isMuted = true;
       this.stopBGM();
-      if (this.masterGain && this.ctx) {
-        this.masterGain.gain.setValueAtTime(0, this.ctx.currentTime);
+      if (this.masterGain) {
+        this.masterGain.gain.value = 0;
+      }
+      if (this.silentAudio && !this.silentAudio.paused) {
+        try { this.silentAudio.pause(); } catch(e) {}
       }
     } else {
       // Turn on
       this.isMuted = false;
-      if (this.masterGain && this.ctx) {
-        this.masterGain.gain.setValueAtTime(1, this.ctx.currentTime);
+      if (this.masterGain) {
+        this.masterGain.gain.value = 1;
+      }
+      if (this.musicGain) {
+        this.musicGain.gain.value = 0.65;
       }
       this.startBGM();
     }
@@ -156,51 +195,68 @@ class SotoSoundManager {
     ];
   }
 
-  // Gamelan chime note
+  // Bright Gamelan chime note (dual-oscillator: fundamental + sparkle for phone speakers)
   playGamelanNote(freq, startTime, duration = 0.5) {
-    if (!this.ctx || !this.musicGain) return;
+    if (!this.ctx || !this.musicGain || this.isMuted) return;
     try {
       const now = this.ctx.currentTime;
       const start = Math.max(startTime, now + 0.005);
       const end = start + duration;
 
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
+      // Primary warm chime
+      const osc1 = this.ctx.createOscillator();
+      const gain1 = this.ctx.createGain();
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, start);
 
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, start);
+      gain1.gain.setValueAtTime(0.001, start);
+      gain1.gain.linearRampToValueAtTime(0.68, start + 0.015);
+      gain1.gain.exponentialRampToValueAtTime(0.001, end);
 
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.linearRampToValueAtTime(0.28, start + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, end);
+      osc1.connect(gain1);
+      gain1.connect(this.musicGain);
+      osc1.start(start);
+      osc1.stop(end + 0.05);
 
-      osc.connect(gain);
-      gain.connect(this.musicGain);
+      // Higher harmonic sparkle (1 octave higher, cuts through phone speakers)
+      const osc2 = this.ctx.createOscillator();
+      const gain2 = this.ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, start);
 
-      osc.start(start);
-      osc.stop(end + 0.05);
+      gain2.gain.setValueAtTime(0.001, start);
+      gain2.gain.linearRampToValueAtTime(0.24, start + 0.01);
+      gain2.gain.exponentialRampToValueAtTime(0.001, start + (duration * 0.45));
+
+      osc2.connect(gain2);
+      gain2.connect(this.musicGain);
+      osc2.start(start);
+      osc2.stop(start + (duration * 0.5));
     } catch (err) {
       console.warn('Gamelan note failed:', err);
     }
   }
 
-  // Soft acoustic bass note
+  // Marimba / Kalimba wood tone (doubled octave so phone speakers can clearly reproduce it)
   playBassNote(freq, startTime, duration = 0.7) {
-    if (!this.ctx || !this.musicGain || !freq) return;
+    if (!this.ctx || !this.musicGain || !freq || this.isMuted) return;
     try {
       const now = this.ctx.currentTime;
       const start = Math.max(startTime, now + 0.005);
       const end = start + duration;
 
+      // Shift lower frequencies up an octave so phone speakers don't drop them
+      const audibleFreq = freq < 200 ? freq * 2 : freq;
+
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, start);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(audibleFreq, start);
 
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.linearRampToValueAtTime(0.2, start + 0.04);
-      gain.gain.exponentialRampToValueAtTime(0.0001, end);
+      gain.gain.setValueAtTime(0.001, start);
+      gain.gain.linearRampToValueAtTime(0.48, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, end);
 
       osc.connect(gain);
       gain.connect(this.musicGain);
@@ -272,7 +328,7 @@ class SotoSoundManager {
   }
 
   // =========================================================================
-  // Tactile Sound Effects
+  // Tactile Sound Effects (Optimized volume for mobile speakers)
   // =========================================================================
 
   playTap() {
@@ -289,7 +345,7 @@ class SotoSoundManager {
       osc.frequency.setValueAtTime(580, now);
       osc.frequency.exponentialRampToValueAtTime(320, now + 0.08);
 
-      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.setValueAtTime(0.45, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
 
       osc.connect(gain);
@@ -314,7 +370,7 @@ class SotoSoundManager {
       osc.frequency.setValueAtTime(420, now);
       osc.frequency.exponentialRampToValueAtTime(860, now + 0.12);
 
-      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.setValueAtTime(0.55, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
 
       osc.connect(gain);
@@ -344,9 +400,9 @@ class SotoSoundManager {
 
         osc.frequency.setValueAtTime(freq, startTime);
 
-        gain.gain.setValueAtTime(0.0001, startTime);
-        gain.gain.linearRampToValueAtTime(0.25, startTime + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+        gain.gain.setValueAtTime(0.001, startTime);
+        gain.gain.linearRampToValueAtTime(0.55, startTime + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
 
         osc.connect(gain);
         gain.connect(this.masterGain);
@@ -364,8 +420,8 @@ class SotoSoundManager {
           osc.type = 'sine';
           osc.frequency.setValueAtTime(600, t);
           osc.frequency.exponentialRampToValueAtTime(1100, t + 0.2);
-          gain.gain.setValueAtTime(0.18, t);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+          gain.gain.setValueAtTime(0.35, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
           osc.connect(gain);
           gain.connect(this.masterGain);
           osc.start(t);
@@ -378,10 +434,15 @@ class SotoSoundManager {
 
 const sotoSound = new SotoSoundManager();
 
+if (typeof window !== 'undefined') {
+  window.sotoSound = sotoSound;
+}
+
 // Global Mobile Web Audio unlock on first user gesture (touch / click)
 if (typeof window !== 'undefined') {
   const unlockAudioOnTouch = () => {
     sotoSound.init();
+    sotoSound.enableMediaChannel();
     ['touchstart', 'touchend', 'click', 'pointerdown'].forEach(evt => {
       document.removeEventListener(evt, unlockAudioOnTouch, true);
     });
