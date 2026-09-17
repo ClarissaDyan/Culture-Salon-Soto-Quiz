@@ -187,8 +187,9 @@
     if (dom.btnDownloadPng) {
       dom.btnDownloadPng.addEventListener('click', () => {
         sotoSound.playTap();
-        if (window.SotoCardGenerator && state.resultSotoId) {
-          SotoCardGenerator.downloadCard(state.resultSotoId, state.lang);
+        const generator = window.SotoCardGenerator || (typeof SotoCardGenerator !== 'undefined' ? SotoCardGenerator : null);
+        if (generator && state.resultSotoId) {
+          generator.downloadCard(state.resultSotoId, state.lang);
           showToast(state.lang === 'en' ? '🎉 Card downloaded!' : '🎉 圖卡已開始下載！');
         }
       });
@@ -197,8 +198,9 @@
     if (dom.btnShareNative) {
       dom.btnShareNative.addEventListener('click', async () => {
         sotoSound.playTap();
-        if (window.SotoCardGenerator && state.resultSotoId) {
-          const shared = await SotoCardGenerator.shareCardWithFile(state.resultSotoId, state.lang);
+        const generator = window.SotoCardGenerator || (typeof SotoCardGenerator !== 'undefined' ? SotoCardGenerator : null);
+        if (generator && state.resultSotoId) {
+          const shared = await generator.shareCardWithFile(state.resultSotoId, state.lang);
           if (!shared) {
             showToast(SOTO_DATA.ui[state.lang].copiedToast);
           }
@@ -683,12 +685,15 @@
     if (dom.cardPreviewImg) dom.cardPreviewImg.style.display = 'none';
 
     try {
-      if (window.SotoCardGenerator) {
-        const dataUrl = await SotoCardGenerator.createCardDataURL(state.resultSotoId, state.lang);
+      const generator = window.SotoCardGenerator || (typeof SotoCardGenerator !== 'undefined' ? SotoCardGenerator : null);
+      if (generator) {
+        const dataUrl = await generator.createCardDataURL(state.resultSotoId, state.lang);
         if (dom.cardPreviewImg) {
           dom.cardPreviewImg.src = dataUrl;
           dom.cardPreviewImg.style.display = 'block';
         }
+      } else {
+        console.error('SotoCardGenerator not available!');
       }
     } catch (err) {
       console.error('Failed to generate card preview:', err);

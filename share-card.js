@@ -401,11 +401,24 @@ const SotoCardGenerator = (function() {
     return { success: true, method: 'download_fallback' };
   }
 
-  return {
+  const generator = {
     renderCard,
     createCardDataURL,
     createCardBlob,
     downloadCard,
     shareCardWithFile
   };
+
+  if (typeof window !== 'undefined') {
+    window.SotoCardGenerator = generator;
+  }
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = generator;
+  }
+
+  return generator;
 })();
+
+if (typeof window !== 'undefined') {
+  window.SotoCardGenerator = SotoCardGenerator;
+}
