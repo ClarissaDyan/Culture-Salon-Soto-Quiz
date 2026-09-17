@@ -7,7 +7,7 @@
 class SotoSoundManager {
   constructor() {
     this.ctx = null;
-    this.isMuted = false;
+    this.isMuted = true; // Start muted until user toggles or interacts
     this.isMusicPlaying = false;
     this.bgmTimer = null;
     this.currentNoteIndex = 0;
@@ -34,7 +34,7 @@ class SotoSoundManager {
         this.masterGain.connect(this.ctx.destination);
 
         this.musicGain = this.ctx.createGain();
-        this.musicGain.gain.setValueAtTime(0.22, this.ctx.currentTime); // Gentle ambient level
+        this.musicGain.gain.setValueAtTime(0.24, this.ctx.currentTime); // Gentle ambient level
         this.musicGain.connect(this.masterGain);
       }
     }
@@ -43,16 +43,30 @@ class SotoSoundManager {
     }
   }
 
-  toggleMute() {
-    this.isMuted = !this.isMuted;
+  // Single control: Toggle both sound and Indonesian background song
+  toggleAll() {
+    this.init();
+    if (this.isMusicPlaying && !this.isMuted) {
+      // Turn off
+      this.isMuted = true;
+      this.stopBGM();
+      if (this.masterGain && this.ctx) {
+        this.masterGain.gain.setValueAtTime(0, this.ctx.currentTime);
+      }
+    } else {
+      // Turn on
+      this.isMuted = false;
+      if (this.masterGain && this.ctx) {
+        this.masterGain.gain.setValueAtTime(1, this.ctx.currentTime);
+      }
+      this.startBGM();
+    }
+
     try {
       localStorage.setItem('soto_sound_muted', this.isMuted.toString());
     } catch (e) {}
 
-    if (this.masterGain && this.ctx) {
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
-    }
-    return this.isMuted;
+    return !this.isMuted;
   }
 
   // =========================================================================
@@ -61,14 +75,12 @@ class SotoSoundManager {
   // =========================================================================
 
   getRasaSayangeScore() {
-    // Frequency map (Hz)
     const N = {
       C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, G3: 196.00, A3: 220.00,
       C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88,
       C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, A5: 880.00
     };
 
-    // Melody: Note, Duration (beats), Bass
     return [
       // Measure 1: "Ra-sa sa-yang-e"
       { note: N.G4, dur: 0.5, bass: N.C3 },
@@ -97,7 +109,7 @@ class SotoSoundManager {
       { note: N.D4, dur: 0.5, bass: null },
       { note: N.C4, dur: 1.25, bass: N.C3 },
 
-      // Measure 5: Second phrase: "Ka-lau a-da su-mur di la-dang"
+      // Measure 5: "Ka-lau a-da su-mur di la-dang"
       { note: N.E4, dur: 0.5, bass: N.C3 },
       { note: N.E4, dur: 0.5, bass: null },
       { note: N.F4, dur: 0.5, bass: N.G3 },
@@ -126,14 +138,13 @@ class SotoSoundManager {
     ];
   }
 
-  // Play a gentle resonant Gamelan / Kolintang bell tone
+  // Gamelan chime note
   playGamelanNote(freq, startTime, duration = 0.5) {
     if (!this.ctx || !this.musicGain) return;
 
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    // Triangle wave mimics wooden xylophone / tuned metal bell bar
     osc.type = 'triangle';
     osc.frequency.setValueAtTime(freq, startTime);
 
@@ -148,7 +159,7 @@ class SotoSoundManager {
     osc.stop(startTime + duration);
   }
 
-  // Play a soft acoustic bass note
+  // Soft acoustic bass note
   playBassNote(freq, startTime, duration = 0.7) {
     if (!this.ctx || !this.musicGain || !freq) return;
 
@@ -208,22 +219,10 @@ class SotoSoundManager {
     }
   }
 
-  // Toggle Indonesian song
-  toggleBGM() {
-    this.init();
-    if (this.isMusicPlaying) {
-      this.stopBGM();
-    } else {
-      this.startBGM();
-    }
-    return this.isMusicPlaying;
-  }
-
   // =========================================================================
   // Tactile Sound Effects
   // =========================================================================
 
-  // Wooden chopstick / marimba tap
   playTap() {
     if (this.isMuted) return;
     this.init();
@@ -248,7 +247,6 @@ class SotoSoundManager {
     osc.stop(now + 0.09);
   }
 
-  // Bubbly cheerful soup pop when picking an option
   playSelect() {
     if (this.isMuted) return;
     this.init();
@@ -273,7 +271,6 @@ class SotoSoundManager {
     osc.stop(now + 0.14);
   }
 
-  // Celebratory pentatonic gamelan fanfare on result reveal
   playFanfare() {
     if (this.isMuted) return;
     this.init();
@@ -303,7 +300,6 @@ class SotoSoundManager {
       osc.stop(startTime + duration);
     });
 
-    // Cute gentle "slurp" bubble finish
     setTimeout(() => {
       if (this.isMuted || !this.ctx || !this.masterGain) return;
       const t = this.ctx.currentTime;

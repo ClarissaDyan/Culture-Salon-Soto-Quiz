@@ -24,11 +24,8 @@
     langEnBtn: document.getElementById('lang-en-btn'),
     langZhBtn: document.getElementById('lang-zh-btn'),
     
-    // Music & Sound buttons
-    musicToggleBtn: document.getElementById('music-toggle-btn'),
-    musicBtnText: document.getElementById('music-btn-text'),
+    // Sound & Music button
     soundToggleBtn: document.getElementById('sound-toggle-btn'),
-    qrOpenBtn: document.getElementById('qr-open-btn'),
     brandHomeBtn: document.getElementById('brand-home-btn'),
 
     // Views
@@ -38,8 +35,6 @@
 
     // Landing screen elements
     heroLineupMount: document.getElementById('hero-lineup-mount'),
-    carouselPrevBtn: document.getElementById('carousel-prev-btn'),
-    carouselNextBtn: document.getElementById('carousel-next-btn'),
     startQuizBtn: document.getElementById('start-quiz-btn'),
 
     // Quiz screen elements
@@ -81,11 +76,6 @@
     allSotosListMount: document.getElementById('all-sotos-list-mount'),
     closeAllSotosBtn: document.getElementById('close-all-sotos-btn'),
 
-    modalQR: document.getElementById('modal-qr'),
-    qrCodeMount: document.getElementById('qr-code-mount'),
-    qrUrlDisplay: document.getElementById('qr-url-display'),
-    closeQRBtn: document.getElementById('close-qr-btn'),
-
     // Toast
     toastMsg: document.getElementById('toast-msg')
   };
@@ -104,7 +94,6 @@
     updateLanguage(state.lang);
     renderHeroLineup();
     updateSoundButton();
-    updateMusicButton();
   }
 
   // Event Listeners Setup
@@ -113,37 +102,11 @@
     dom.langEnBtn.addEventListener('click', () => setLanguage('en'));
     dom.langZhBtn.addEventListener('click', () => setLanguage('zh'));
 
-    // Indonesian Music Player Toggle
-    dom.musicToggleBtn.addEventListener('click', () => {
-      const isPlaying = sotoSound.toggleBGM();
-      updateMusicButton();
-      if (isPlaying) {
-        showToast(SOTO_DATA.ui[state.lang].musicLabel);
-      }
-    });
-
-    // Sound Effects Toggle
-    dom.soundToggleBtn.addEventListener('click', () => {
-      const isMuted = sotoSound.toggleMute();
-      updateSoundButton();
-      if (!isMuted) sotoSound.playTap();
-    });
-
-    // Carousel Scroll Arrows
-    if (dom.carouselPrevBtn && dom.carouselNextBtn) {
-      dom.carouselPrevBtn.addEventListener('click', () => {
-        const track = document.getElementById('hero-carousel-track');
-        if (track) {
-          sotoSound.playTap();
-          track.scrollBy({ left: -160, behavior: 'smooth' });
-        }
-      });
-      dom.carouselNextBtn.addEventListener('click', () => {
-        const track = document.getElementById('hero-carousel-track');
-        if (track) {
-          sotoSound.playTap();
-          track.scrollBy({ left: 160, behavior: 'smooth' });
-        }
+    // Sound & Indonesian Folk Song Single Toggle
+    if (dom.soundToggleBtn) {
+      dom.soundToggleBtn.addEventListener('click', () => {
+        sotoSound.toggleAll();
+        updateSoundButton();
       });
     }
 
@@ -157,13 +120,6 @@
         startQuiz();
       });
     }
-
-    // Presentation QR Modal
-    dom.qrOpenBtn.addEventListener('click', () => {
-      sotoSound.playTap();
-      openQRModal();
-    });
-    dom.closeQRBtn.addEventListener('click', closeModals);
 
     // Return to landing on logo click
     dom.brandHomeBtn.addEventListener('click', (e) => {
@@ -237,28 +193,19 @@
 
   // Update UI Sound Button appearance
   function updateSoundButton() {
-    const isMuted = sotoSound.isMuted;
-    dom.soundToggleBtn.innerHTML = isMuted ? '🔇' : '🔊';
-    const text = isMuted ? SOTO_DATA.ui[state.lang].soundOff : SOTO_DATA.ui[state.lang].soundOn;
+    if (!dom.soundToggleBtn) return;
+    const isPlaying = !sotoSound.isMuted && sotoSound.isMusicPlaying;
+    dom.soundToggleBtn.innerHTML = isPlaying ? '🔊' : '🔇';
+    if (isPlaying) {
+      dom.soundToggleBtn.classList.add('sound-btn-active');
+      dom.soundToggleBtn.classList.remove('sound-btn-muted');
+    } else {
+      dom.soundToggleBtn.classList.remove('sound-btn-active');
+      dom.soundToggleBtn.classList.add('sound-btn-muted');
+    }
+    const text = isPlaying ? SOTO_DATA.ui[state.lang].soundOn : SOTO_DATA.ui[state.lang].soundOff;
     dom.soundToggleBtn.setAttribute('title', text);
     dom.soundToggleBtn.setAttribute('aria-label', text);
-  }
-
-  // Update Music Toggle Button appearance
-  function updateMusicButton() {
-    if (!dom.musicToggleBtn) return;
-    const isPlaying = sotoSound.isMusicPlaying;
-    const ui = SOTO_DATA.ui[state.lang];
-
-    if (isPlaying) {
-      dom.musicToggleBtn.classList.add('playing');
-      dom.musicBtnText.textContent = ui.musicPause;
-      dom.musicToggleBtn.setAttribute('title', ui.musicPause);
-    } else {
-      dom.musicToggleBtn.classList.remove('playing');
-      dom.musicBtnText.textContent = ui.musicPlay;
-      dom.musicToggleBtn.setAttribute('title', ui.musicPlay);
-    }
   }
 
   // Set Language and update state
@@ -296,7 +243,6 @@
     });
 
     updateSoundButton();
-    updateMusicButton();
     renderHeroLineup();
 
     // Re-render active view content if needed
@@ -366,6 +312,10 @@
     `).join('');
 
     dom.modalSotoInspect.classList.add('active');
+    const sheet = dom.modalSotoInspect.querySelector('.modal-sheet');
+    const body = dom.modalSotoInspect.querySelector('.modal-body');
+    if (sheet) sheet.scrollTop = 0;
+    if (body) body.scrollTop = 0;
   }
 
   // Start Quiz
@@ -644,23 +594,28 @@
     });
 
     dom.modalAllSotos.classList.add('active');
-  }
-
-  // Open Presentation QR Code Modal
-  function openQRModal() {
-    const currentUrl = window.location.href;
-    dom.qrUrlDisplay.textContent = currentUrl;
-    if (window.renderQRCode) {
-      window.renderQRCode(dom.qrCodeMount, currentUrl, 220);
-    }
-    dom.modalQR.classList.add('active');
+    const allSheet = dom.modalAllSotos.querySelector('.modal-sheet');
+    const allBody = dom.modalAllSotos.querySelector('.modal-body');
+    if (allSheet) allSheet.scrollTop = 0;
+    if (allBody) allBody.scrollTop = 0;
   }
 
   // Close all open modals
   function closeModals() {
-    if (dom.modalSotoInspect) dom.modalSotoInspect.classList.remove('active');
-    dom.modalAllSotos.classList.remove('active');
-    dom.modalQR.classList.remove('active');
+    if (dom.modalSotoInspect) {
+      dom.modalSotoInspect.classList.remove('active');
+      const inspectSheet = dom.modalSotoInspect.querySelector('.modal-sheet');
+      const inspectBody = dom.modalSotoInspect.querySelector('.modal-body');
+      if (inspectSheet) inspectSheet.scrollTop = 0;
+      if (inspectBody) inspectBody.scrollTop = 0;
+    }
+    if (dom.modalAllSotos) {
+      dom.modalAllSotos.classList.remove('active');
+      const allSheet = dom.modalAllSotos.querySelector('.modal-sheet');
+      const allBody = dom.modalAllSotos.querySelector('.modal-body');
+      if (allSheet) allSheet.scrollTop = 0;
+      if (allBody) allBody.scrollTop = 0;
+    }
   }
 
   // Run on DOM ready

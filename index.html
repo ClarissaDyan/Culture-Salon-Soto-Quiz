@@ -33,19 +33,8 @@
       </a>
 
       <div class="header-actions">
-        <!-- Indonesian Music BGM Player -->
-        <button id="music-toggle-btn" class="btn-music-toggle" title="Play Indonesian Folk Song (Rasa Sayange)" aria-label="Toggle Music">
-          <span class="music-note-icon">🎵</span>
-          <span id="music-btn-text" class="music-label-text" data-i18n="musicPlay">播放民謠</span>
-        </button>
-
-        <!-- Presentation Live QR Code Trigger -->
-        <button id="qr-open-btn" class="btn-icon-subtle" title="Show QR Code for Presentation" aria-label="QR Code">
-          📱
-        </button>
-
-        <!-- Sound Effects Mute Toggle -->
-        <button id="sound-toggle-btn" class="btn-icon-subtle" title="Sound: On" aria-label="Toggle sound">
+        <!-- Sound & Indonesian Folk Song Toggle -->
+        <button id="sound-toggle-btn" class="btn-icon-subtle sound-btn-active" title="Play Indonesian Folk Song & Sound" aria-label="Toggle Indonesian Folk Song and Sound">
           🔊
         </button>
 
@@ -77,18 +66,14 @@
           <circle cx="25" cy="25" r="8" fill="#E3A426" opacity="0.4"/>
         </svg>
 
-        <span class="landing-tagline-badge">Culture Salon 🇮🇩 Presentation</span>
+        <span class="landing-tagline-badge">Indonesian Culinary Discovery 🇮🇩</span>
         
         <h1 class="landing-title" data-i18n="siteTitle">你是哪一種梭多？</h1>
         <p class="landing-subtitle" data-i18n="siteSubtitle">測出你的印尼靈魂風味！</p>
 
-        <!-- Carousel Header Hint & Navigation -->
+        <!-- Carousel Header Hint -->
         <div class="carousel-meta-bar">
           <span class="carousel-hint-text" data-i18n="carouselHint">👆 點擊任一梭多查看靈魂食材 • 左右滑動探索 ➔</span>
-          <div class="carousel-arrow-btns">
-            <button id="carousel-prev-btn" type="button" class="btn-carousel-arrow" aria-label="Scroll left">‹</button>
-            <button id="carousel-next-btn" type="button" class="btn-carousel-arrow" aria-label="Scroll right">›</button>
-          </div>
         </div>
 
         <!-- Animated Hero Lineup of All 5 Soto Bowls (Scrollable) -->
@@ -147,7 +132,7 @@
         <button id="prev-btn" class="btn-nav-prev" type="button" disabled>
           <span data-i18n="prevBtn">← 上一題</span>
         </button>
-        <span style="font-size:0.8rem; color:#8C786D; font-weight:600;">Culture Salon 2026</span>
+        <span class="quiz-nav-badge">🍜 Soto Quiz</span>
       </div>
     </section>
 
@@ -278,23 +263,6 @@
     </div>
   </div>
 
-  <!-- Modal: Presentation Live QR Code -->
-  <div id="modal-qr" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-qr-title">
-    <div class="modal-sheet" style="max-width:380px;">
-      <div class="modal-header">
-        <h3 id="modal-qr-title" class="modal-title" data-i18n="qrModalTitle">現場掃描 QR Code 立即測驗！</h3>
-        <button id="close-qr-btn" class="modal-close-btn" aria-label="Close modal">✕</button>
-      </div>
-      <div class="qr-modal-body">
-        <p style="font-size:0.9rem; color:#6C584C; margin-bottom:12px;" data-i18n="qrModalDesc">
-          用手機相機掃描下方條碼，立刻在手機上參與測驗！
-        </p>
-        <div id="qr-code-mount" class="qr-code-mount"></div>
-        <p id="qr-url-display" class="qr-url-text"></p>
-      </div>
-    </div>
-  </div>
-
   <!-- Toast Notification -->
   <div id="toast-msg" class="toast-msg" role="status" aria-live="polite">
     結果已複製到剪貼簿！
@@ -302,7 +270,6 @@
 
   <!-- Footer -->
   <footer class="site-footer" role="contentinfo">
-    <p class="footer-cultural-note" data-i18n="credits">專為 Culture Salon 🇮🇩 文化沙龍分享會製作</p>
     <p>Indonesian Soto Personality Quiz • Mobile-Friendly Web App</p>
   </footer>
 
@@ -311,7 +278,6 @@
   <script src="illustrations.js"></script>
   <script src="sound.js"></script>
   <script src="confetti.js"></script>
-  <script src="qr-gen.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
