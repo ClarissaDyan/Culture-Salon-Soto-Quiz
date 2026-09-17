@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Which Soto Are You? | 你是哪一種梭多？</title>
+  
+  <meta name="description" content="Discover your Indonesian soup personality! A bilingual quiz exploring 5 iconic regional varieties of Soto for Culture Salon.">
+  <meta name="theme-color" content="#FBF3E4">
+
+  <!-- Open Graph for Mobile Sharing -->
+  <meta property="og:title" content="Which Soto Are You? | 你是哪一種梭多？">
+  <meta property="og:description" content="Take this 8-question personality quiz to discover which Indonesian Soto matches your soul!">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=800&auto=format&fit=crop&q=60">
+
+  <!-- Favicon Emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍜</text></svg>">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Confetti Celebration Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Sticky Global Header -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="#" id="brand-home-btn" class="brand-badge" title="Which Soto Are You?">
+        <span class="brand-icon">🍜</span>
+        <span data-i18n="siteTitle">你是哪一種梭多？</span>
+      </a>
+
+      <div class="header-actions">
+        <!-- Presentation Live QR Code Trigger -->
+        <button id="qr-open-btn" class="btn-icon-subtle" title="Show QR Code for Presentation" aria-label="QR Code">
+          📱
+        </button>
+
+        <!-- Web Audio Mute Toggle -->
+        <button id="sound-toggle-btn" class="btn-icon-subtle" title="Sound: On" aria-label="Toggle sound">
+          🔊
+        </button>
+
+        <!-- Language Switcher -->
+        <div class="lang-toggle-group" role="group" aria-label="Language selection">
+          <button type="button" id="lang-zh-btn" class="lang-btn active">繁中</button>
+          <button type="button" id="lang-en-btn" class="lang-btn">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container" role="main">
+
+    <!-- 1. LANDING VIEW -->
+    <section id="landing-view" class="view-section active" aria-label="Landing Page">
+      <div class="landing-card">
+        
+        <!-- Batik Decorative Kawung SVG Corners -->
+        <svg class="batik-corner batik-top-left" viewBox="0 0 50 50">
+          <circle cx="25" cy="0" r="18" fill="#C1502E" opacity="0.2"/>
+          <circle cx="0" cy="25" r="18" fill="#C1502E" opacity="0.2"/>
+          <circle cx="25" cy="25" r="8" fill="#E3A426" opacity="0.4"/>
+        </svg>
+        <svg class="batik-corner batik-top-right" viewBox="0 0 50 50">
+          <circle cx="25" cy="0" r="18" fill="#C1502E" opacity="0.2"/>
+          <circle cx="0" cy="25" r="18" fill="#C1502E" opacity="0.2"/>
+          <circle cx="25" cy="25" r="8" fill="#E3A426" opacity="0.4"/>
+        </svg>
+
+        <span class="landing-tagline-badge">Culture Salon 🇮🇩 Presentation</span>
+        
+        <h1 class="landing-title" data-i18n="siteTitle">你是哪一種梭多？</h1>
+        <p class="landing-subtitle" data-i18n="siteSubtitle">測出你的印尼靈魂風味！</p>
+
+        <!-- Animated Hero Lineup of All 5 Soto Bowls -->
+        <div id="hero-lineup-mount"></div>
+
+        <!-- Storytelling Intro Hook -->
+        <div class="landing-intro-box">
+          <p data-i18n="introHook">
+            印尼有一道國民湯品「梭多」（Soto），群島上的每個地區都用自己的風土與香料將它重新演繹。回答 8 個趣味問題，找出哪一碗梭多最能代表你的真實性格！
+          </p>
+        </div>
+
+        <!-- Start Quiz CTA Button -->
+        <button id="start-quiz-btn" class="btn-primary-start" type="button">
+          <span data-i18n="startQuizBtn">開始測驗 🍲</span>
+        </button>
+
+        <div class="landing-features-row">
+          <span>✨ 8 題直覺測驗</span>
+          <span>•</span>
+          <span>🗺️ 探索印尼風土</span>
+          <span>•</span>
+          <span>🎉 專屬性格解析</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. QUIZ VIEW -->
+    <section id="quiz-view" class="view-section" aria-label="Quiz Questions">
+      <div class="quiz-header">
+        <div class="quiz-progress-meta">
+          <span id="question-badge" class="question-badge">問題 1 / 8</span>
+          <span id="decider-badge" class="decider-pill" style="display:none;" data-i18n="tieBreakerBadge">關鍵風味裁決</span>
+        </div>
+        <div class="progress-bar-track">
+          <div id="progress-fill" class="progress-bar-fill">
+            <span id="progress-mascot" class="progress-mascot">🥣</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Question Card -->
+      <div id="question-card" class="question-card">
+        <h2 id="question-prompt" class="question-prompt">問題加載中...</h2>
+        
+        <div id="options-list" class="options-list" role="radiogroup">
+          <!-- 5 Options rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Quiz Navigation Footer -->
+      <div class="quiz-nav-row">
+        <button id="prev-btn" class="btn-nav-prev" type="button" disabled>
+          <span data-i18n="prevBtn">← 上一題</span>
+        </button>
+        <span style="font-size:0.8rem; color:#8C786D; font-weight:600;">Culture Salon 2026</span>
+      </div>
+    </section>
+
+    <!-- 3. RESULT VIEW -->
+    <section id="result-view" class="view-section" aria-label="Quiz Result">
+      <div class="result-card">
+
+        <!-- Batik SVG Corners -->
+        <svg class="batik-corner batik-top-left" viewBox="0 0 50 50">
+          <circle cx="25" cy="0" r="18" fill="#C1502E" opacity="0.2"/>
+          <circle cx="0" cy="25" r="18" fill="#C1502E" opacity="0.2"/>
+          <circle cx="25" cy="25" r="8" fill="#E3A426" opacity="0.4"/>
+        </svg>
+        <svg class="batik-corner batik-top-right" viewBox="0 0 50 50">
+          <circle cx="25" cy="0" r="18" fill="#C1502E" opacity="0.2"/>
+          <circle cx="0" cy="25" r="18" fill="#C1502E" opacity="0.2"/>
+          <circle cx="25" cy="25" r="8" fill="#E3A426" opacity="0.4"/>
+        </svg>
+
+        <p class="result-headline-eyebrow" data-i18n="resultHeadline">你的梭多性格</p>
+        <h2 id="result-soto-title" class="result-soto-title">拉夢根雞肉梭多</h2>
+        <span id="result-tagline" class="result-soto-tagline">值得信賴的經典款</span>
+
+        <!-- Animated Character Vector Graphic with steam -->
+        <div id="result-illustration-mount" class="result-illustration-wrap"></div>
+
+        <!-- Trait Pills -->
+        <div id="result-traits-row" class="traits-row"></div>
+
+        <!-- Personality Storytelling Blurb -->
+        <div class="personality-blurb-box">
+          <p id="result-blurb-text" class="personality-blurb-text"></p>
+        </div>
+
+        <!-- Cultural Fun Fact Box -->
+        <div class="fun-fact-box">
+          <div class="fun-fact-icon">💡</div>
+          <div>
+            <h4 class="fun-fact-title" data-i18n="funFactLabel">你知道嗎？</h4>
+            <p id="result-fun-fact-text" class="fun-fact-text"></p>
+          </div>
+        </div>
+
+        <!-- Interactive Indonesia Regional Map Pin -->
+        <div id="result-map-mount"></div>
+
+        <!-- Action CTAs -->
+        <div class="result-actions-grid">
+          <button id="retake-btn" class="btn-result-action btn-retake" type="button">
+            <span data-i18n="retakeBtn">重新測驗 ↺</span>
+          </button>
+          <button id="share-btn" class="btn-result-action btn-share" type="button">
+            <span data-i18n="shareBtn">分享測驗結果 📋</span>
+          </button>
+          <button id="explore-btn" class="btn-result-action btn-explore" type="button">
+            <span data-i18n="exploreBtn">認識全部 5 款梭多 🗺️</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Explore All 5 Sotos -->
+  <div id="modal-all-sotos" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-all-title">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-all-title" class="modal-title" data-i18n="allSotosTitle">印尼 5 大代表性梭多</h3>
+          <p style="font-size:0.8rem; color:#6C584C;" data-i18n="allSotosSubtitle">每一碗熱湯，都蘊含著跨海貿易與在地歷史故事。</p>
+        </div>
+        <button id="close-all-sotos-btn" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+      <div id="all-sotos-list-mount" class="modal-body">
+        <!-- Filled dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Presentation Live QR Code -->
+  <div id="modal-qr" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-qr-title">
+    <div class="modal-sheet" style="max-width:380px;">
+      <div class="modal-header">
+        <h3 id="modal-qr-title" class="modal-title" data-i18n="qrModalTitle">現場掃描 QR Code 立即測驗！</h3>
+        <button id="close-qr-btn" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+      <div class="qr-modal-body">
+        <p style="font-size:0.9rem; color:#6C584C; margin-bottom:12px;" data-i18n="qrModalDesc">
+          用手機相機掃描下方條碼，立刻在手機上參與測驗！
+        </p>
+        <div id="qr-code-mount" class="qr-code-mount"></div>
+        <p id="qr-url-display" class="qr-url-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-msg" class="toast-msg" role="status" aria-live="polite">
+    結果已複製到剪貼簿！
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <p class="footer-cultural-note" data-i18n="credits">專為 Culture Salon 🇮🇩 文化沙龍分享會製作</p>
+    <p>Indonesian Soto Personality Quiz • Mobile-Friendly Web App</p>
+  </footer>
+
+  <!-- Scripts in dependency order -->
+  <script src="soto-data.js"></script>
+  <script src="illustrations.js"></script>
+  <script src="sound.js"></script>
+  <script src="confetti.js"></script>
+  <script src="qr-gen.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
