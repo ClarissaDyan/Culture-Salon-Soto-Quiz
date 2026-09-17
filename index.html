@@ -33,12 +33,18 @@
       </a>
 
       <div class="header-actions">
+        <!-- Indonesian Music BGM Player -->
+        <button id="music-toggle-btn" class="btn-music-toggle" title="Play Indonesian Folk Song (Rasa Sayange)" aria-label="Toggle Music">
+          <span class="music-note-icon">🎵</span>
+          <span id="music-btn-text" class="music-label-text" data-i18n="musicPlay">播放民謠</span>
+        </button>
+
         <!-- Presentation Live QR Code Trigger -->
         <button id="qr-open-btn" class="btn-icon-subtle" title="Show QR Code for Presentation" aria-label="QR Code">
           📱
         </button>
 
-        <!-- Web Audio Mute Toggle -->
+        <!-- Sound Effects Mute Toggle -->
         <button id="sound-toggle-btn" class="btn-icon-subtle" title="Sound: On" aria-label="Toggle sound">
           🔊
         </button>
@@ -76,8 +82,19 @@
         <h1 class="landing-title" data-i18n="siteTitle">你是哪一種梭多？</h1>
         <p class="landing-subtitle" data-i18n="siteSubtitle">測出你的印尼靈魂風味！</p>
 
-        <!-- Animated Hero Lineup of All 5 Soto Bowls -->
-        <div id="hero-lineup-mount"></div>
+        <!-- Carousel Header Hint & Navigation -->
+        <div class="carousel-meta-bar">
+          <span class="carousel-hint-text" data-i18n="carouselHint">👆 點擊任一梭多查看靈魂食材 • 左右滑動探索 ➔</span>
+          <div class="carousel-arrow-btns">
+            <button id="carousel-prev-btn" type="button" class="btn-carousel-arrow" aria-label="Scroll left">‹</button>
+            <button id="carousel-next-btn" type="button" class="btn-carousel-arrow" aria-label="Scroll right">›</button>
+          </div>
+        </div>
+
+        <!-- Animated Hero Lineup of All 5 Soto Bowls (Scrollable) -->
+        <div class="hero-lineup-wrapper">
+          <div id="hero-lineup-mount" class="hero-lineup-scroll"></div>
+        </div>
 
         <!-- Storytelling Intro Hook -->
         <div class="landing-intro-box">
@@ -194,6 +211,56 @@
     </section>
 
   </main>
+
+  <!-- Modal: Inspect Single Soto & Ingredients -->
+  <div id="modal-soto-inspect" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-inspect-title">
+    <div class="modal-sheet soto-inspect-sheet">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-inspect-title" class="modal-title" data-i18n="inspectModalTitle">梭多風味檔案與靈魂配料</h3>
+          <span id="modal-inspect-region" class="region-badge-pill">📍 發源地</span>
+        </div>
+        <button id="close-inspect-btn" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body inspect-modal-body">
+        <div id="modal-inspect-illustration" class="inspect-illustration-wrap"></div>
+        <h4 id="modal-inspect-name" class="inspect-soto-name"></h4>
+        <span id="modal-inspect-tagline" class="inspect-soto-tagline"></span>
+
+        <!-- Broth Section -->
+        <div class="inspect-section broth-section">
+          <h5 class="inspect-section-title" data-i18n="brothLabel">🍲 靈魂湯頭特色</h5>
+          <p id="modal-inspect-broth" class="inspect-section-text"></p>
+        </div>
+
+        <!-- Ingredients Section -->
+        <div class="inspect-section ingredients-section">
+          <h5 class="inspect-section-title" data-i18n="ingredientsLabel">🥢 核心配料與靈魂食材</h5>
+          <div id="modal-inspect-essentials" class="essentials-grid"></div>
+        </div>
+
+        <!-- Culture & Eating Style -->
+        <div class="inspect-section culture-section">
+          <h5 class="inspect-section-title" data-i18n="cultureLabel">🌴 在地道地吃法</h5>
+          <p id="modal-inspect-culture" class="inspect-section-text"></p>
+        </div>
+
+        <!-- Fun Fact -->
+        <div class="fun-fact-box" style="margin-bottom:0;">
+          <div class="fun-fact-icon">💡</div>
+          <div>
+            <h5 class="fun-fact-title" data-i18n="funFactLabel">你知道嗎？</h5>
+            <p id="modal-inspect-funfact" class="fun-fact-text"></p>
+          </div>
+        </div>
+
+        <!-- Start Quiz CTA -->
+        <button id="inspect-start-quiz-btn" class="btn-primary-start" style="width:100%; max-width:none; margin-top:8px;" type="button">
+          <span data-i18n="takeQuizMatchBtn">立刻測驗看你是不是這碗！🍲</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal: Explore All 5 Sotos -->
   <div id="modal-all-sotos" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-all-title">

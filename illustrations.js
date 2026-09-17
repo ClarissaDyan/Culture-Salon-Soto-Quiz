@@ -324,29 +324,44 @@ const SOTO_ILLUSTRATIONS = {
     `;
   },
 
-  // Hero Lineup of All 5 Characters Together
-  getHeroLineupSVG() {
+  // Hero Lineup of All 5 Characters Together (Horizontal Swipeable Carousel)
+  getHeroLineupSVG(lang = 'zh') {
+    const isEn = lang === 'en';
     return `
-    <div class="hero-soto-lineup">
+    <div class="hero-soto-lineup" id="hero-carousel-track">
       <div class="lineup-item" data-soto="lamongan" title="Soto Ayam Lamongan">
-        ${this.getLamonganSVG(110)}
-        <span class="lineup-label">Lamongan</span>
+        <div class="lineup-svg-wrap">${this.getLamonganSVG(115)}</div>
+        <span class="lineup-label">${isEn ? 'Lamongan' : '拉夢根雞肉'}</span>
+        <span class="lineup-sub">${isEn ? 'East Java' : '東爪哇'}</span>
+        <span class="lineup-peek-badge">🔍 ${isEn ? 'Ingredients' : '食材配方'}</span>
       </div>
+
       <div class="lineup-item" data-soto="betawi" title="Soto Betawi">
-        ${this.getBetawiSVG(110)}
-        <span class="lineup-label">Betawi</span>
+        <div class="lineup-svg-wrap">${this.getBetawiSVG(115)}</div>
+        <span class="lineup-label">${isEn ? 'Betawi' : '巴達威牛肉'}</span>
+        <span class="lineup-sub">${isEn ? 'Jakarta' : '雅加達'}</span>
+        <span class="lineup-peek-badge">🔍 ${isEn ? 'Ingredients' : '食材配方'}</span>
       </div>
-      <div class="lineup-item center-highlight" data-soto="padang" title="Soto Padang">
-        ${this.getPadangSVG(125)}
-        <span class="lineup-label">Padang</span>
+
+      <div class="lineup-item" data-soto="padang" title="Soto Padang">
+        <div class="lineup-svg-wrap">${this.getPadangSVG(115)}</div>
+        <span class="lineup-label">${isEn ? 'Padang' : '巴東香辣'}</span>
+        <span class="lineup-sub">${isEn ? 'West Sumatra' : '西蘇門答臘'}</span>
+        <span class="lineup-peek-badge">🔍 ${isEn ? 'Ingredients' : '食材配方'}</span>
       </div>
+
       <div class="lineup-item" data-soto="banjar" title="Soto Banjar">
-        ${this.getBanjarSVG(110)}
-        <span class="lineup-label">Banjar</span>
+        <div class="lineup-svg-wrap">${this.getBanjarSVG(115)}</div>
+        <span class="lineup-label">${isEn ? 'Banjar' : '班查爾香料'}</span>
+        <span class="lineup-sub">${isEn ? 'S. Kalimantan' : '南加里曼丹'}</span>
+        <span class="lineup-peek-badge">🔍 ${isEn ? 'Ingredients' : '食材配方'}</span>
       </div>
+
       <div class="lineup-item" data-soto="makassar" title="Coto Makassar">
-        ${this.getMakassarSVG(110)}
-        <span class="lineup-label">Makassar</span>
+        <div class="lineup-svg-wrap">${this.getMakassarSVG(115)}</div>
+        <span class="lineup-label">${isEn ? 'Makassar' : '望加錫花生'}</span>
+        <span class="lineup-sub">${isEn ? 'S. Sulawesi' : '南蘇拉威西'}</span>
+        <span class="lineup-peek-badge">🔍 ${isEn ? 'Ingredients' : '食材配方'}</span>
       </div>
     </div>
     `;

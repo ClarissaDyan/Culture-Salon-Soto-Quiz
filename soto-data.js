@@ -34,7 +34,16 @@ const SOTO_DATA = {
       soundOn: "Sound: On",
       soundOff: "Sound: Muted",
       credits: "Made for Culture Salon 🇮🇩 Presentation",
-      tieBreakerBadge: "Flavor Decider Match"
+      tieBreakerBadge: "Flavor Decider Match",
+      musicPlay: "🎵 Play Indonesian Song",
+      musicPause: "⏸️ Pause Song",
+      musicLabel: "Indonesian Folk Song: Rasa Sayange 🎶",
+      carouselHint: "👆 Tap any bowl for secret ingredients • Swipe to explore ➔",
+      inspectModalTitle: "Soto Profile & Cultural Essentials",
+      brothLabel: "🍲 Broth Signature",
+      ingredientsLabel: "🥢 Key Ingredients & Essentials",
+      cultureLabel: "🌴 How Locals Enjoy It",
+      takeQuizMatchBtn: "Take Quiz to Match! 🍲"
     },
     zh: {
       siteTitle: "你是哪一種梭多？",
@@ -64,7 +73,16 @@ const SOTO_DATA = {
       soundOn: "音效：開啟",
       soundOff: "音效：靜音",
       credits: "專為 Culture Salon 🇮🇩 文化沙龍分享會製作",
-      tieBreakerBadge: "關鍵風味裁決"
+      tieBreakerBadge: "關鍵風味裁決",
+      musicPlay: "🎵 播放印尼民謠",
+      musicPause: "⏸️ 暫停民謠",
+      musicLabel: "印尼經典民謠：Rasa Sayange 🎶",
+      carouselHint: "👆 點擊任一梭多查看靈魂食材 • 左右滑動探索 ➔",
+      inspectModalTitle: "梭多風味檔案與靈魂配料",
+      brothLabel: "🍲 靈魂湯頭特色",
+      ingredientsLabel: "🥢 核心配料與靈魂食材",
+      cultureLabel: "🌴 在地道地吃法",
+      takeQuizMatchBtn: "立刻測驗看你是不是這碗！🍲"
     }
   },
 
@@ -80,9 +98,27 @@ const SOTO_DATA = {
       regionEn: "Lamongan, East Java",
       regionZh: "東爪哇 · 拉夢根",
       island: "java",
-      mapCoordinates: { x: 495, y: 345 }, // relative to simplified map
+      mapCoordinates: { x: 495, y: 345 },
       traitsEn: ["Balanced", "Comforting", "Dependable", "Universally Loved"],
       traitsZh: ["恰到好處", "溫暖療癒", "值得信賴", "人見人愛"],
+      brothEn: "Clear, golden chicken broth simmered for hours with fresh turmeric, lemongrass, ginger, shallots, and aromatic kaffir lime leaves.",
+      brothZh: "以鮮土雞、鮮薑黃、香茅、南薑、紅蔥頭與青檸葉慢火慢熬的澄澈金黃雞清湯，清甜鮮美。",
+      essentialsEn: [
+        { icon: "🍗", name: "Shredded Free-Range Chicken", desc: "Tender chicken simmered in spiced broth, then shredded fine." },
+        { icon: "🧄", name: "Crunchy Koya Powder", desc: "The soul of Lamongan: finely crushed fried garlic + savory shrimp crackers." },
+        { icon: "🍜", name: "Soun Glass Noodles & Cabbage", desc: "Light, slurpable mung bean noodles and crisp shredded cabbage." },
+        { icon: "🍋", name: "Fresh Calamansi Lime", desc: "Squeezed fresh at the table to lift the golden broth with bright acidity." },
+        { icon: "🥚", name: "Boiled Eggs & Fried Shallots", desc: "Topped with sliced hard-boiled egg and golden fried shallots (bawang goreng)." }
+      ],
+      essentialsZh: [
+        { icon: "🍗", name: "慢燉手撕雞絲", desc: "原湯燜煮入味的嫩雞肉，手撕成絲，吸飽薑黃香氣。" },
+        { icon: "🧄", name: "靈魂 Koya 蝦餅蒜粉", desc: "拉夢根的註冊商標：炸蒜頭與印尼香脆蝦餅研磨成的神級調味粉！" },
+        { icon: "🍜", name: "滑順冬粉與高麗菜絲", desc: "吸滿鮮美湯汁的彈牙綠豆冬粉，佐以爽脆鮮甜的現切高麗菜絲。" },
+        { icon: "🍋", name: "現擠印尼酸柑小青檸", desc: "食用前擠入一瓣新鮮青檸檬汁，瞬間激發湯頭明亮果酸層次。" },
+        { icon: "🥚", name: "切片水煮蛋與炸紅蔥酥", desc: "經典標配滷蛋切片，鋪上噴香酥脆的傳統炸紅蔥酥（Bawang Goreng）。" }
+      ],
+      cultureEn: "Served roadside at bustling warungs across Java with warm steamed rice and spicy sambal cabe rawit.",
+      cultureZh: "爪哇島街頭巷尾最普遍的靈魂美食，通常搭配一大碗熱騰騰的白飯，並依個人口味拌入火辣的鳥眼辣椒醬（Sambal）。",
       visualEn: "Golden turmeric broth, shredded chicken, glass noodles, topped with koya (crunchy garlic-prawn cracker powder).",
       visualZh: "金黃薑黃雞湯、鮮嫩雞絲、冬粉，撒上靈魂配料「Koya」（炸蒜蝦餅粉）。",
       blurbEn: "You're the friend everyone counts on. Warm, familiar, and quietly perfect — just like the golden broth that made this soto Indonesia's most iconic comfort food.",
@@ -104,6 +140,24 @@ const SOTO_DATA = {
       mapCoordinates: { x: 375, y: 325 },
       traitsEn: ["Rich", "Cozy", "Indulgent", "Loves Treating Themselves"],
       traitsZh: ["濃郁醇厚", "極致舒適", "懂得享受", "犒賞自我"],
+      brothEn: "Luxurious creamy broth uniquely crafted with both rich coconut milk (santan) and cow's milk, infused with clove, nutmeg, and galangal.",
+      brothZh: "雅加達獨門創舉：同時融合香濃椰奶（Santan）與新鮮牛奶（或淡奶），加入丁香、肉豆蔻慢熬成絲滑濃郁的奶白醇湯。",
+      essentialsEn: [
+        { icon: "🥩", name: "Braised Beef Shank & Offal", desc: "Tender chunks of beef brisket, shank, and sometimes tripe simmered to melt-in-mouth softness." },
+        { icon: "🥥", name: "Coconut & Dairy Milk Dual Broth", desc: "Rich and velvety, creating a warm decadent mouthfeel." },
+        { icon: "🍅", name: "Fresh Red Tomatoes", desc: "Juicy, tangy tomato wedges that cut through the richness of the milk broth." },
+        { icon: "🥔", name: "Fried Potato Cubes", desc: "Crispy-edged diced potatoes that soak up the spiced creamy soup." },
+        { icon: "🍘", name: "Emping Melinjo Crackers", desc: "Bittersweet crunchy crackers crushed straight into the bowl." }
+      ],
+      essentialsZh: [
+        { icon: "🥩", name: "慢燉牛腩牛雜", desc: "精心燉煮至軟爛多汁的牛腩、牛筋與精選牛雜，肉香四溢。" },
+        { icon: "🥥", name: "椰奶與鮮乳雙重奶香湯頭", desc: "絲滑濃郁的質地，帶有肉豆蔻與丁香的微甜溫潤木質芬芳。" },
+        { icon: "🍅", name: "新鮮多汁紅番茄", desc: "切片番茄的天然微酸，精準平衡了奶香的濃重，清爽解膩。" },
+        { icon: "🥔", name: "金黃酥炸馬鈴薯丁", desc: "先炸後泡入濃湯的馬鈴薯塊，外微酥內鬆綿，吸飽精華。" },
+        { icon: "🍘", name: "苦甜買麻藤樹籽餅（Emping）", desc: "略帶回甘微苦的傳統炸樹籽脆餅，捏碎泡入湯中格外香脆有層次。" }
+      ],
+      cultureEn: "A Jakarta specialty born from multi-ethnic trade; enjoyed during lunchtime in Batavia's historic alleys, often topped with acar pickles and sweet soy sauce.",
+      cultureZh: "誕生於巴達維亞（今雅加達）多元文化交融的港口市集，老饕習慣加一匙甜醬油（Kecap Manis）與酸黃瓜（Acar）拌飯同享。",
       visualEn: "Creamy white-yellow broth (coconut milk + dairy milk), tender beef, tomato, potato.",
       visualZh: "椰奶與鮮奶交織的奶白湯頭，搭配燉得軟嫩的牛肉、番茄與馬鈴薯。",
       blurbEn: "You believe comfort is worth chasing. Rich, creamy, and a little decadent — you know when to indulge and you never apologize for it.",
@@ -125,6 +179,24 @@ const SOTO_DATA = {
       mapCoordinates: { x: 235, y: 220 },
       traitsEn: ["Bold", "Exciting", "Textural", "Doesn't Play It Safe"],
       traitsZh: ["大膽強烈", "層次多變", "口感酥脆", "永不安於平淡"],
+      brothEn: "Deep amber clear beef broth packed with robust Minangkabau spices: star anise, cardamom, cinnamon, cloves, coriander, and fiery chili oil.",
+      brothZh: "深褐琥珀色的重磅香料清湯，融入八角、豆蔻、肉桂、丁香與芫荽籽，辛香撲鼻、霸氣濃烈。",
+      essentialsEn: [
+        { icon: "🥓", name: "Dendeng Sapi (Two-step Crispy Beef)", desc: "Beef simmered with spices until tender, sliced thin, and flash-fried to bacon-like crispness!" },
+        { icon: "🥔", name: "Perkedel Kentang / Crunchy Sticks", desc: "Golden fried potato patties and crispy matchstick potatoes for signature crunch." },
+        { icon: "🍜", name: "Soun & Crispy Vermicelli", desc: "Steamed rice glass noodles paired with crunchy fried noodles." },
+        { icon: "🌶️", name: "Sambal Balado / Cabe Merah", desc: "Pounded red chili relish for bold, fiery West Sumatran heat." },
+        { icon: "🍘", name: "Pink/Red Kerupuk Merah", desc: "Traditional West Sumatran pink tapioca crackers floating on top." }
+      ],
+      essentialsZh: [
+        { icon: "🥓", name: "雙工法極脆牛肉乾（Dendeng）", desc: "先以香料深燉至軟爛，再切薄片高溫油炸至如培根般極致香脆！" },
+        { icon: "🥔", name: "印尼馬鈴薯餅與酥脆薯籤", desc: "綿密油潤的 Perkedel 薯泥餅，搭配撒在頂部的金黃酥脆炸薯籤。" },
+        { icon: "🍜", name: "冬粉與酥炸米粉", desc: "滑順的冬粉鋪底，上面點綴炸得膨鬆酥脆的米粉，口感對比強烈。" },
+        { icon: "🌶️", name: "鮮紅米南佳保辣醬（Sambal）", desc: "以紅辣椒與紅蔥頭手舂製成的大膽辣醬，辣香直衝腦門。" },
+        { icon: "🍘", name: "巴東粉紅蝦餅（Kerupuk Merah）", desc: "西蘇門答臘招牌的粉紅色薄脆餅，泡在辣湯裡半脆半潤最好吃！" }
+      ],
+      cultureEn: "Iconic staple of West Sumatra's famed Minangkabau cuisine. Eaten with a pile of steamed rice and dipped crackers for maximum textural explosion.",
+      cultureZh: "西蘇門答臘米南佳保族的驕傲之作，口感講究「脆、爽、辣、甘」，是巴東餐廳裡最讓人驚艷的熱湯料理。",
       visualEn: "Clear deeply-spiced broth, thin crispy fried beef strips, crunchy potato sticks (perkedel/kentang goreng), fried noodles.",
       visualZh: "濃郁辛香的深色湯底，搭配薄脆香酥的炸牛肉絲、酥脆馬鈴薯與炸米粉。",
       blurbEn: "You go big or go home. Crispy textures, deep spice, no boring choices — you're the one who orders the most interesting thing on the menu.",
@@ -146,6 +218,24 @@ const SOTO_DATA = {
       mapCoordinates: { x: 505, y: 240 },
       traitsEn: ["Elegant", "Thoughtful", "A Little Formal", "Appreciates Fine Details"],
       traitsZh: ["高雅細緻", "沈穩體貼", "氣質優雅", "講究細節"],
+      brothEn: "Sublimely fragrant golden clear broth perfumed with royal Sultanate spices: cinnamon bark, whole cloves, nutmeg, cardamom, and a splash of condensed milk.",
+      brothZh: "南加里曼丹蘇丹國宮廷等級的金黃香料湯，以肉桂棒、整顆丁香、肉豆蔻與白豆蔻燉製，帶有高貴的木質甘甜芬芳。",
+      essentialsEn: [
+        { icon: "🥢", name: "Royal Spice Symphony", desc: "Whole cinnamon, star anise, nutmeg, and cloves create a signature tea-like perfume." },
+        { icon: "🥚", name: "Sliced Duck / Chicken Eggs", desc: "Traditionally made with rich local duck eggs, halved to display golden yolks." },
+        { icon: "🥔", name: "Perkedel Kentang (Potato Cake)", desc: "Fluffy seasoned mashed potato patties with golden-brown crust." },
+        { icon: "🍙", name: "Ketupat Rice Diamonds", desc: "Served with fragrant pressed rice cakes instead of loose rice, cut into bite-sized cubes." },
+        { icon: "🌿", name: "Chinese Celery (Seledri)", desc: "Finely minced fresh aromatic celery and crisp shallots." }
+      ],
+      essentialsZh: [
+        { icon: "🥢", name: "宮廷四重奏香料", desc: "整根肉桂棒、八角、肉豆蔻與丁香原粒，散發如茶道般悠遠的暖香。" },
+        { icon: "🥚", name: "金黃蛋黃水煮蛋切片", desc: "在地傳統使用婆羅洲土產鹹鴨蛋或水煮鴨蛋，蛋黃脂香濃郁。" },
+        { icon: "🥔", name: "鬆軟圓形印尼馬鈴薯餅", desc: "以蒜碎、白胡椒調味的馬鈴薯泥揉成圓餅，裹蛋液慢煎而成。" },
+        { icon: "🍙", name: "傳統菱形粽米糕（Ketupat）", desc: "以椰葉編織蒸熟的緊實米糕，切成小塊取代白飯浸潤高湯。" },
+        { icon: "🌿", name: "新鮮細芹菜與青檸", desc: "撒上大量香氣濃郁的印尼小芹菜碎與青檸汁，平衡香料厚度。" }
+      ],
+      cultureEn: "Originated in the Banjar Sultanate along Borneo's rivers. Traditionally served at Banjar weddings, formal banquets, and floating river markets (pasar terapung).",
+      cultureZh: "源自婆羅洲南部的班查爾蘇丹國水上城鎮，常出現在當地的傳統婚宴與知名的水上市場（Pasar Terapung），極具儀式感。",
       visualEn: "Golden clear broth fragrant with cinnamon/clove/nutmeg, boiled egg halves, perkedel (potato patty), served with ketupat.",
       visualZh: "洋溢肉桂、丁香與肉豆蔻芬芳的金黃清湯，配水煮蛋、馬鈴薯餅與菱形米糕（Ketupat）。",
       blurbEn: "You have old-soul elegance. Warm spices like cinnamon and clove run through you — refined, fragrant, and quietly sophisticated.",
@@ -167,6 +257,24 @@ const SOTO_DATA = {
       mapCoordinates: { x: 645, y: 275 },
       traitsEn: ["Daring", "Unconventional", "Deep", "Unforgettable"],
       traitsZh: ["勇於突破", "不落俗套", "深邃濃烈", "過目難忘"],
+      brothEn: "Deep, earthy dark broth made by slow-cooking beef with toasted ground peanuts, rice water, galangal, lemongrass, and up to 40 secret herbs.",
+      brothZh: "以烘焙花生磨碎成蓉，混入淘米水、南薑、香茅與多達40種秘製香料，長時間熬煮出如黑巧克力般深邃濃稠的甘醇湯底。",
+      essentialsEn: [
+        { icon: "🥜", name: "Roasted Ground Peanut Paste", desc: "Fresh peanuts dry-roasted and ground to impart signature nuttiness and thick broth body." },
+        { icon: "🥩", name: "Braised Beef & Premium Offal", desc: "Generous cuts of beef, liver, lung, and tripe simmered in earthen clay pots until savory and tender." },
+        { icon: "🌶️", name: "Sambal Taoco (Fermented Bean Chili)", desc: "Unique fermented soybean (taoco) chili paste that adds umami and tang." },
+        { icon: "🍙", name: "Ketupat Daun Kelapa", desc: "Served with miniature diamond woven rice cakes sliced at your table." },
+        { icon: "🧅", name: "Fried Shallots & Spring Onions", desc: "A generous blanket of aromatic alliums to cut through the heavy peanut broth." }
+      ],
+      essentialsZh: [
+        { icon: "🥜", name: "慢火烘焙研磨花生蓉", desc: "特選熟花生炒香後細磨成膏，賦予湯底無可比擬的濃稠度與堅果濃香。" },
+        { icon: "🥩", name: "陶鍋厚燉牛腩與牛雜", desc: "遵循古法在陶鍋中久燉的牛腱肉、牛肚、牛肝與牛肺，肉質軟爛入味。" },
+        { icon: "🌶️", name: "獨門發酵豆醬辣椒（Sambal Taoco）", desc: "望加錫特有的發酵黃豆（Taoco）辣醬，酸香鹹辣，鮮度爆棚。" },
+        { icon: "🍙", name: "椰葉編織米糕（Ketupat）", desc: "哥多錫肉湯絕不搭配普通白飯，必定搭配緊實有彈性的菱形米糕。" },
+        { icon: "🧅", name: "厚重酥炸紅蔥頭與蔥花", desc: "上桌前覆蓋滿滿的香蔥與紅蔥酥，熱湯一沖，鑊氣撲鼻。" }
+      ],
+      cultureEn: "The pride of South Sulawesi seafaring Bugis culture since the 16th century kingdom of Gowa. Traditionally simmered in porous clay pots called 'kuali tanah'.",
+      cultureZh: "南蘇拉威西航海民族布吉斯人（Bugis）自16世紀戈瓦王國傳承至今的瑰寶，堅持用特製陶鍋熬煮，風味深邃雄渾。",
       visualEn: "Thick dark peanut-and-spice broth, beef and offal, served with ketupat (pressed rice cake) instead of rice.",
       visualZh: "濃稠深色的烘焙花生香料濃湯，燉牛肉搭配傳統菱形編織米糕（Ketupat）。",
       blurbEn: "You're not for everyone — and you like it that way. Deep, dark, intensely flavorful, you leave a stronger impression than anyone else in the room.",

@@ -1,7 +1,9 @@
 /**
  * Application Logic for "Which Soto Are You?" (你是哪一種梭多？)
  * State management, quiz transitions, scoring logic, tie-breaker,
- * dynamic bilingual i18n, sound events, and presentation features.
+ * dynamic bilingual i18n, sound events, Indonesian BGM,
+ * horizontal scroll carousel, single soto inspection popup,
+ * and automatic smooth scrolling between quiz questions.
  */
 
 (function() {
@@ -22,7 +24,9 @@
     langEnBtn: document.getElementById('lang-en-btn'),
     langZhBtn: document.getElementById('lang-zh-btn'),
     
-    // Sound & Presentation buttons
+    // Music & Sound buttons
+    musicToggleBtn: document.getElementById('music-toggle-btn'),
+    musicBtnText: document.getElementById('music-btn-text'),
     soundToggleBtn: document.getElementById('sound-toggle-btn'),
     qrOpenBtn: document.getElementById('qr-open-btn'),
     brandHomeBtn: document.getElementById('brand-home-btn'),
@@ -34,6 +38,8 @@
 
     // Landing screen elements
     heroLineupMount: document.getElementById('hero-lineup-mount'),
+    carouselPrevBtn: document.getElementById('carousel-prev-btn'),
+    carouselNextBtn: document.getElementById('carousel-next-btn'),
     startQuizBtn: document.getElementById('start-quiz-btn'),
 
     // Quiz screen elements
@@ -59,6 +65,18 @@
     exploreBtn: document.getElementById('explore-btn'),
 
     // Modals
+    modalSotoInspect: document.getElementById('modal-soto-inspect'),
+    closeInspectBtn: document.getElementById('close-inspect-btn'),
+    inspectStartQuizBtn: document.getElementById('inspect-start-quiz-btn'),
+    modalInspectIllustration: document.getElementById('modal-inspect-illustration'),
+    modalInspectName: document.getElementById('modal-inspect-name'),
+    modalInspectTagline: document.getElementById('modal-inspect-tagline'),
+    modalInspectRegion: document.getElementById('modal-inspect-region'),
+    modalInspectBroth: document.getElementById('modal-inspect-broth'),
+    modalInspectEssentials: document.getElementById('modal-inspect-essentials'),
+    modalInspectCulture: document.getElementById('modal-inspect-culture'),
+    modalInspectFunFact: document.getElementById('modal-inspect-funfact'),
+
     modalAllSotos: document.getElementById('modal-all-sotos'),
     allSotosListMount: document.getElementById('all-sotos-list-mount'),
     closeAllSotosBtn: document.getElementById('close-all-sotos-btn'),
@@ -86,6 +104,7 @@
     updateLanguage(state.lang);
     renderHeroLineup();
     updateSoundButton();
+    updateMusicButton();
   }
 
   // Event Listeners Setup
@@ -94,12 +113,50 @@
     dom.langEnBtn.addEventListener('click', () => setLanguage('en'));
     dom.langZhBtn.addEventListener('click', () => setLanguage('zh'));
 
-    // Sound Toggle
+    // Indonesian Music Player Toggle
+    dom.musicToggleBtn.addEventListener('click', () => {
+      const isPlaying = sotoSound.toggleBGM();
+      updateMusicButton();
+      if (isPlaying) {
+        showToast(SOTO_DATA.ui[state.lang].musicLabel);
+      }
+    });
+
+    // Sound Effects Toggle
     dom.soundToggleBtn.addEventListener('click', () => {
       const isMuted = sotoSound.toggleMute();
       updateSoundButton();
       if (!isMuted) sotoSound.playTap();
     });
+
+    // Carousel Scroll Arrows
+    if (dom.carouselPrevBtn && dom.carouselNextBtn) {
+      dom.carouselPrevBtn.addEventListener('click', () => {
+        const track = document.getElementById('hero-carousel-track');
+        if (track) {
+          sotoSound.playTap();
+          track.scrollBy({ left: -160, behavior: 'smooth' });
+        }
+      });
+      dom.carouselNextBtn.addEventListener('click', () => {
+        const track = document.getElementById('hero-carousel-track');
+        if (track) {
+          sotoSound.playTap();
+          track.scrollBy({ left: 160, behavior: 'smooth' });
+        }
+      });
+    }
+
+    // Single Soto Inspect Modal Close & Actions
+    if (dom.closeInspectBtn) {
+      dom.closeInspectBtn.addEventListener('click', closeModals);
+    }
+    if (dom.inspectStartQuizBtn) {
+      dom.inspectStartQuizBtn.addEventListener('click', () => {
+        closeModals();
+        startQuiz();
+      });
+    }
 
     // Presentation QR Modal
     dom.qrOpenBtn.addEventListener('click', () => {
@@ -121,12 +178,13 @@
       startQuiz();
     });
 
-    // Quiz Navigation
+    // Quiz Navigation - Previous Button with auto scroll
     dom.prevBtn.addEventListener('click', () => {
       if (state.currentQuestionIndex > 0) {
         sotoSound.playTap();
         state.currentQuestionIndex--;
         renderQuestion(state.currentQuestionIndex, 'prev');
+        autoScrollToQuestion();
       }
     });
 
@@ -148,18 +206,33 @@
     dom.closeAllSotosBtn.addEventListener('click', closeModals);
 
     // Modal backdrop clicks
-    [dom.modalAllSotos, dom.modalQR].forEach(modal => {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          closeModals();
-        }
-      });
+    [dom.modalSotoInspect, dom.modalAllSotos, dom.modalQR].forEach(modal => {
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModals();
+          }
+        });
+      }
     });
 
     // Escape key closes modals
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModals();
     });
+  }
+
+  // Auto-scroll helper to bring active question immediately into view
+  function autoScrollToQuestion() {
+    setTimeout(() => {
+      if (dom.quizView) {
+        const topY = dom.quizView.getBoundingClientRect().top + window.pageYOffset - 24;
+        window.scrollTo({
+          top: Math.max(0, topY),
+          behavior: 'smooth'
+        });
+      }
+    }, 60);
   }
 
   // Update UI Sound Button appearance
@@ -169,6 +242,23 @@
     const text = isMuted ? SOTO_DATA.ui[state.lang].soundOff : SOTO_DATA.ui[state.lang].soundOn;
     dom.soundToggleBtn.setAttribute('title', text);
     dom.soundToggleBtn.setAttribute('aria-label', text);
+  }
+
+  // Update Music Toggle Button appearance
+  function updateMusicButton() {
+    if (!dom.musicToggleBtn) return;
+    const isPlaying = sotoSound.isMusicPlaying;
+    const ui = SOTO_DATA.ui[state.lang];
+
+    if (isPlaying) {
+      dom.musicToggleBtn.classList.add('playing');
+      dom.musicBtnText.textContent = ui.musicPause;
+      dom.musicToggleBtn.setAttribute('title', ui.musicPause);
+    } else {
+      dom.musicToggleBtn.classList.remove('playing');
+      dom.musicBtnText.textContent = ui.musicPlay;
+      dom.musicToggleBtn.setAttribute('title', ui.musicPlay);
+    }
   }
 
   // Set Language and update state
@@ -206,6 +296,8 @@
     });
 
     updateSoundButton();
+    updateMusicButton();
+    renderHeroLineup();
 
     // Re-render active view content if needed
     if (dom.quizView.classList.contains('active')) {
@@ -226,25 +318,54 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (viewName === 'quiz') {
       dom.quizView.classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      autoScrollToQuestion();
     } else if (viewName === 'result') {
       dom.resultView.classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
-  // Render Landing Hero Lineup
+  // Render Landing Hero Lineup Carousel
   function renderHeroLineup() {
-    dom.heroLineupMount.innerHTML = SOTO_ILLUSTRATIONS.getHeroLineupSVG();
+    dom.heroLineupMount.innerHTML = SOTO_ILLUSTRATIONS.getHeroLineupSVG(state.lang);
     
-    // Allow clicking a lineup bowl to peek at that soto
+    // Tapping ANY lineup card opens the rich Soto Detail & Ingredients Modal!
     dom.heroLineupMount.querySelectorAll('.lineup-item').forEach(item => {
       item.addEventListener('click', () => {
         const sotoTag = item.getAttribute('data-soto');
         sotoSound.playSelect();
-        openAllSotosModal(sotoTag);
+        openInspectModal(sotoTag);
       });
     });
+  }
+
+  // Open the Single Soto Inspect & Secret Ingredients Modal
+  function openInspectModal(sotoId) {
+    const soto = SOTO_DATA.personalities[sotoId];
+    if (!soto) return;
+
+    const isEn = state.lang === 'en';
+
+    dom.modalInspectIllustration.innerHTML = SOTO_ILLUSTRATIONS.getCharacterSVG(sotoId, 160);
+    dom.modalInspectName.textContent = isEn ? soto.nameEn : soto.nameZh;
+    dom.modalInspectTagline.textContent = isEn ? soto.tag : soto.tagZh;
+    dom.modalInspectRegion.textContent = `📍 ${isEn ? soto.regionEn : soto.regionZh}`;
+    dom.modalInspectBroth.textContent = isEn ? soto.brothEn : soto.brothZh;
+    dom.modalInspectCulture.textContent = isEn ? soto.cultureEn : soto.cultureZh;
+    dom.modalInspectFunFact.textContent = isEn ? soto.funFactEn : soto.funFactZh;
+
+    const essentials = isEn ? soto.essentialsEn : soto.essentialsZh;
+    dom.modalInspectEssentials.innerHTML = essentials.map(item => `
+      <div class="essential-item">
+        <span class="essential-icon">${item.icon}</span>
+        <div class="essential-info">
+          <strong>${item.name}</strong>
+          <span>${item.desc}</span>
+        </div>
+      </div>
+    `).join('');
+
+    dom.modalSotoInspect.classList.add('active');
   }
 
   // Start Quiz
@@ -253,6 +374,7 @@
     state.answers = new Array(8).fill(null);
     switchView('quiz');
     renderQuestion(0, 'next');
+    autoScrollToQuestion();
   }
 
   // Reset and restart quiz
@@ -325,7 +447,7 @@
     });
   }
 
-  // Handle Option Click
+  // Handle Option Click with automatic smooth scrolling to top
   function handleOptionClick(sotoTag, buttonEl) {
     if (state.isAnimating) return;
     state.isAnimating = true;
@@ -346,13 +468,17 @@
       if (state.currentQuestionIndex < SOTO_DATA.questions.length - 1) {
         state.currentQuestionIndex++;
         renderQuestion(state.currentQuestionIndex, 'next');
+        
+        // AUTO SCROLL UP TO TOP OF QUESTION:
+        autoScrollToQuestion();
         state.isAnimating = false;
       } else {
         // Quiz completed! Calculate and show result
         calculateAndShowResult();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         state.isAnimating = false;
       }
-    }, 320);
+    }, 300);
   }
 
   // Scoring and Tie-Breaker Calculation
@@ -491,7 +617,7 @@
     const listHtml = Object.values(SOTO_DATA.personalities).map(item => {
       const isHighlighted = highlightSotoId === item.id;
       return `
-        <div class="all-soto-entry" style="${isHighlighted ? 'border-color:var(--color-terracotta); background:#FFF3DE;' : ''}">
+        <div class="all-soto-entry" style="${isHighlighted ? 'border-color:var(--color-terracotta); background:#FFF3DE;' : ''}" data-soto="${item.id}">
           <div class="all-soto-thumb">
             ${SOTO_ILLUSTRATIONS.getCharacterSVG(item.id, 72)}
           </div>
@@ -499,12 +625,24 @@
             <h4>${isEn ? item.nameEn : item.nameZh}</h4>
             <span class="region-tag">📍 ${isEn ? item.regionEn : item.regionZh}</span>
             <p>${isEn ? item.visualEn : item.visualZh}</p>
+            <span style="font-size:0.75rem; color:var(--color-terracotta); font-weight:700; margin-top:4px; display:inline-block;">🔍 ${isEn ? 'Tap to view full recipe & essentials' : '點擊查看秘製食材與文化源流'} ➔</span>
           </div>
         </div>
       `;
     }).join('');
 
     dom.allSotosListMount.innerHTML = listHtml;
+    
+    // Clicking any entry in the all sotos list opens the detailed inspect modal!
+    dom.allSotosListMount.querySelectorAll('.all-soto-entry').forEach(entry => {
+      entry.style.cursor = 'pointer';
+      entry.addEventListener('click', () => {
+        const sotoId = entry.getAttribute('data-soto');
+        closeModals();
+        openInspectModal(sotoId);
+      });
+    });
+
     dom.modalAllSotos.classList.add('active');
   }
 
@@ -520,6 +658,7 @@
 
   // Close all open modals
   function closeModals() {
+    if (dom.modalSotoInspect) dom.modalSotoInspect.classList.remove('active');
     dom.modalAllSotos.classList.remove('active');
     dom.modalQR.classList.remove('active');
   }
