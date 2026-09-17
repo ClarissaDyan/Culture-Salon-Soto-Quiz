@@ -43,7 +43,10 @@ const SOTO_DATA = {
       brothLabel: "🍲 Broth Signature",
       ingredientsLabel: "🥢 Key Ingredients & Essentials",
       cultureLabel: "🌴 How Locals Enjoy It",
-      takeQuizMatchBtn: "Take Quiz to Match! 🍲"
+      takeQuizMatchBtn: "Take Quiz to Match! 🍲",
+      feature1: "✨ 8 Quick Questions",
+      feature2: "🗺️ Explore Indonesia",
+      feature3: "🎉 Your Soto Match"
     },
     zh: {
       siteTitle: "你是哪一種梭多？",
@@ -82,7 +85,10 @@ const SOTO_DATA = {
       brothLabel: "🍲 靈魂湯頭特色",
       ingredientsLabel: "🥢 核心配料與靈魂食材",
       cultureLabel: "🌴 在地道地吃法",
-      takeQuizMatchBtn: "立刻測驗看你是不是這碗！🍲"
+      takeQuizMatchBtn: "立刻測驗看你是不是這碗！🍲",
+      feature1: "✨ 8 題直覺測驗",
+      feature2: "🗺️ 探索印尼風土",
+      feature3: "🎉 專屬性格解析"
     }
   },
 
