@@ -76,8 +76,10 @@
     allSotosListMount: document.getElementById('all-sotos-list-mount'),
     closeAllSotosBtn: document.getElementById('close-all-sotos-btn'),
 
-    // Toast
-    toastMsg: document.getElementById('toast-msg')
+    // Toast & Footer Now Playing
+    toastMsg: document.getElementById('toast-msg'),
+    nowPlayingBar: document.getElementById('now-playing-bar'),
+    nowPlayingStatus: document.getElementById('now-playing-status')
   };
 
   // Initialize App
@@ -94,6 +96,7 @@
     updateLanguage(state.lang);
     renderHeroLineup();
     updateSoundButton();
+    updateNowPlayingBar();
   }
 
   // Event Listeners Setup
@@ -107,6 +110,16 @@
       dom.soundToggleBtn.addEventListener('click', () => {
         sotoSound.toggleAll();
         updateSoundButton();
+        updateNowPlayingBar();
+      });
+    }
+
+    // Footer Now Playing Bar Click Toggle
+    if (dom.nowPlayingBar) {
+      dom.nowPlayingBar.addEventListener('click', () => {
+        sotoSound.toggleAll();
+        updateSoundButton();
+        updateNowPlayingBar();
       });
     }
 
@@ -208,6 +221,23 @@
     dom.soundToggleBtn.setAttribute('aria-label', text);
   }
 
+  // Update Footer Now Playing Bar state
+  function updateNowPlayingBar() {
+    if (!dom.nowPlayingBar || !dom.nowPlayingStatus) return;
+    const isPlaying = !sotoSound.isMuted && sotoSound.isMusicPlaying;
+    const ui = SOTO_DATA.ui[state.lang];
+
+    if (isPlaying) {
+      dom.nowPlayingBar.classList.add('is-playing');
+      dom.nowPlayingStatus.className = 'now-playing-status active';
+      dom.nowPlayingStatus.textContent = ui.nowPlayingActive;
+    } else {
+      dom.nowPlayingBar.classList.remove('is-playing');
+      dom.nowPlayingStatus.className = 'now-playing-status paused';
+      dom.nowPlayingStatus.textContent = ui.nowPlayingPaused;
+    }
+  }
+
   // Set Language and update state
   function setLanguage(lang) {
     if (state.lang === lang) return;
@@ -243,6 +273,7 @@
     });
 
     updateSoundButton();
+    updateNowPlayingBar();
     renderHeroLineup();
 
     // Re-render active view content if needed

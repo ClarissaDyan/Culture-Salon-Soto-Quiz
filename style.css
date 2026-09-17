@@ -1387,10 +1387,90 @@ body {
   margin-top: auto;
 }
 
-.footer-cultural-note {
+.now-playing-bar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  background: rgba(227, 164, 38, 0.12);
+  border: 1.5px solid rgba(193, 80, 46, 0.28);
+  border-radius: var(--border-radius-pill);
+  padding: 7px 18px;
+  margin: 0 auto 14px;
+  font-size: 0.82rem;
+  color: var(--color-charcoal);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 4px rgba(58, 46, 39, 0.05);
+  user-select: none;
+}
+
+.now-playing-bar:hover {
+  background: rgba(227, 164, 38, 0.22);
+  border-color: var(--color-terracotta);
+  transform: translateY(-1px);
+}
+
+.now-playing-bar:active {
+  transform: translateY(1px);
+}
+
+.now-playing-bar.is-playing {
+  background: rgba(193, 80, 46, 0.1);
+  border-color: var(--color-terracotta);
+  box-shadow: 0 2px 8px rgba(193, 80, 46, 0.14);
+}
+
+.now-playing-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.now-playing-bar.is-playing .now-playing-icon {
+  display: inline-block;
+  animation: musicIconWiggle 1s infinite alternate ease-in-out;
+}
+
+@keyframes musicIconWiggle {
+  from { transform: scale(1) rotate(-8deg); }
+  to { transform: scale(1.2) rotate(8deg); }
+}
+
+.now-playing-label {
   font-weight: 600;
+  color: #6C584C;
+}
+
+.now-playing-title {
   color: var(--color-maroon);
-  margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.now-playing-sub {
+  color: #8C786D;
+  font-size: 0.78rem;
+}
+
+.now-playing-status {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--border-radius-pill);
+  transition: all var(--transition-fast);
+}
+
+.now-playing-status.active {
+  background: var(--color-turmeric-light);
+  color: var(--color-maroon);
+  border: 1px solid rgba(193, 80, 46, 0.4);
+}
+
+.now-playing-status.paused {
+  background: rgba(58, 46, 39, 0.08);
+  color: #7A685D;
 }
 
 /* ==========================================================================

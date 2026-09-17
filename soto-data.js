@@ -46,7 +46,12 @@ const SOTO_DATA = {
       takeQuizMatchBtn: "Take Quiz to Match! 🍲",
       feature1: "✨ 8 Quick Questions",
       feature2: "🗺️ Explore Indonesia",
-      feature3: "🎉 Your Soto Match"
+      feature3: "🎉 Your Soto Match",
+      nowPlayingLabel: "Music:",
+      nowPlayingTitle: "Rasa Sayange",
+      nowPlayingSub: "(Indonesian Folk Song)",
+      nowPlayingActive: "• Playing 🔊",
+      nowPlayingPaused: "• Tap 🔊 to Play"
     },
     zh: {
       siteTitle: "你是哪一種梭多？",
@@ -88,7 +93,12 @@ const SOTO_DATA = {
       takeQuizMatchBtn: "立刻測驗看你是不是這碗！🍲",
       feature1: "✨ 8 題直覺測驗",
       feature2: "🗺️ 探索印尼風土",
-      feature3: "🎉 專屬性格解析"
+      feature3: "🎉 專屬性格解析",
+      nowPlayingLabel: "背景配樂：",
+      nowPlayingTitle: "Rasa Sayange",
+      nowPlayingSub: "（印尼傳統民謠）",
+      nowPlayingActive: "• 播放中 🔊",
+      nowPlayingPaused: "• 點擊 🔊 播放"
     }
   },
 
