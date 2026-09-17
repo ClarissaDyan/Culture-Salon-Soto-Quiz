@@ -51,14 +51,7 @@ const SOTO_DATA = {
       nowPlayingTitle: "Rasa Sayange",
       nowPlayingSub: "(Indonesian Folk Song)",
       nowPlayingActive: "• Playing 🔊",
-      nowPlayingPaused: "• Tap 🔊 to Play",
-      saveCardBtn: "📸 Save Result Card",
-      cardModalTitle: "📸 Your Soto Result Card",
-      cardModalSubtitle: "Save your result card to share on Instagram, WhatsApp, or Line!",
-      generatingCard: "Crafting your personalized soto card...",
-      mobileSaveHint: "💡 On mobile, press & hold image to save to photos!",
-      downloadPngBtn: "📥 Download PNG Card",
-      shareCardNativeBtn: "📤 Share Card & Link"
+      nowPlayingPaused: "• Tap 🔊 to Play"
     },
     zh: {
       siteTitle: "你是哪一種梭多？",
@@ -105,14 +98,7 @@ const SOTO_DATA = {
       nowPlayingTitle: "Rasa Sayange",
       nowPlayingSub: "（印尼傳統民謠）",
       nowPlayingActive: "• 播放中 🔊",
-      nowPlayingPaused: "• 點擊 🔊 播放",
-      saveCardBtn: "📸 儲存分享圖卡",
-      cardModalTitle: "📸 你的專屬梭多圖卡",
-      cardModalSubtitle: "保存專屬性格卡，分享到 Instagram、Line 或限時動態！",
-      generatingCard: "正在烹煮製作精美圖卡...",
-      mobileSaveHint: "💡 手機用戶亦可直接長按圖片「儲存至相片」！",
-      downloadPngBtn: "📥 下載 PNG 圖卡",
-      shareCardNativeBtn: "📤 分享圖卡與連結"
+      nowPlayingPaused: "• 點擊 🔊 播放"
     }
   },
 
