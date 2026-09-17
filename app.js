@@ -58,6 +58,7 @@
     resultMapMount: document.getElementById('result-map-mount'),
     retakeBtn: document.getElementById('retake-btn'),
     shareBtn: document.getElementById('share-btn'),
+    cardDownloadBtn: document.getElementById('card-download-btn'),
     exploreBtn: document.getElementById('explore-btn'),
 
     // Modals
@@ -76,6 +77,13 @@
     modalAllSotos: document.getElementById('modal-all-sotos'),
     allSotosListMount: document.getElementById('all-sotos-list-mount'),
     closeAllSotosBtn: document.getElementById('close-all-sotos-btn'),
+
+    modalShareCard: document.getElementById('modal-share-card'),
+    closeCardBtn: document.getElementById('close-card-btn'),
+    cardLoadingSpinner: document.getElementById('card-loading-spinner'),
+    cardPreviewImg: document.getElementById('card-preview-img'),
+    btnDownloadPng: document.getElementById('btn-download-png'),
+    btnShareNative: document.getElementById('btn-share-native'),
 
     // Toast & Footer Now Playing
     toastMsg: document.getElementById('toast-msg'),
@@ -166,8 +174,41 @@
 
     dom.shareBtn.addEventListener('click', () => {
       sotoSound.playTap();
-      shareResult();
+      openShareCardModal();
     });
+
+    if (dom.cardDownloadBtn) {
+      dom.cardDownloadBtn.addEventListener('click', () => {
+        sotoSound.playTap();
+        openShareCardModal();
+      });
+    }
+
+    if (dom.btnDownloadPng) {
+      dom.btnDownloadPng.addEventListener('click', () => {
+        sotoSound.playTap();
+        if (window.SotoCardGenerator && state.resultSotoId) {
+          SotoCardGenerator.downloadCard(state.resultSotoId, state.lang);
+          showToast(state.lang === 'en' ? '🎉 Card downloaded!' : '🎉 圖卡已開始下載！');
+        }
+      });
+    }
+
+    if (dom.btnShareNative) {
+      dom.btnShareNative.addEventListener('click', async () => {
+        sotoSound.playTap();
+        if (window.SotoCardGenerator && state.resultSotoId) {
+          const shared = await SotoCardGenerator.shareCardWithFile(state.resultSotoId, state.lang);
+          if (!shared) {
+            showToast(SOTO_DATA.ui[state.lang].copiedToast);
+          }
+        }
+      });
+    }
+
+    if (dom.closeCardBtn) {
+      dom.closeCardBtn.addEventListener('click', closeAllModals);
+    }
 
     dom.exploreBtn.addEventListener('click', () => {
       sotoSound.playTap();
@@ -192,11 +233,20 @@
         }
       });
     }
+    if (dom.modalShareCard) {
+      dom.modalShareCard.addEventListener('click', (e) => {
+        if (e.target === dom.modalShareCard) {
+          closeAllModals();
+        }
+      });
+    }
 
     // Escape key closes active modal (returning back to All Sotos if in inspect modal)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (dom.modalSotoInspect && dom.modalSotoInspect.classList.contains('active')) {
+        if (dom.modalShareCard && dom.modalShareCard.classList.contains('active')) {
+          closeAllModals();
+        } else if (dom.modalSotoInspect && dom.modalSotoInspect.classList.contains('active')) {
           handleCloseInspect();
         } else if (dom.modalAllSotos && dom.modalAllSotos.classList.contains('active')) {
           closeAllModals();
@@ -295,6 +345,9 @@
       renderQuestion(state.currentQuestionIndex, 'none');
     } else if (dom.resultView.classList.contains('active') && state.resultSotoId) {
       populateResultScreen(state.resultSotoId);
+      if (dom.modalShareCard && dom.modalShareCard.classList.contains('active')) {
+        openShareCardModal();
+      }
     }
   }
 
@@ -615,6 +668,37 @@
     }, 2500);
   }
 
+  // Open Share Card Generator Modal
+  async function openShareCardModal() {
+    if (!state.resultSotoId || !dom.modalShareCard) return;
+
+    dom.modalShareCard.classList.add('active');
+    const sheet = dom.modalShareCard.querySelector('.modal-sheet');
+    const body = dom.modalShareCard.querySelector('.modal-body');
+    if (sheet) sheet.scrollTop = 0;
+    if (body) body.scrollTop = 0;
+
+    // Show loading spinner while generating high-res canvas card
+    if (dom.cardLoadingSpinner) dom.cardLoadingSpinner.style.display = 'flex';
+    if (dom.cardPreviewImg) dom.cardPreviewImg.style.display = 'none';
+
+    try {
+      if (window.SotoCardGenerator) {
+        const dataUrl = await SotoCardGenerator.createCardDataURL(state.resultSotoId, state.lang);
+        if (dom.cardPreviewImg) {
+          dom.cardPreviewImg.src = dataUrl;
+          dom.cardPreviewImg.style.display = 'block';
+        }
+      }
+    } catch (err) {
+      console.error('Failed to generate card preview:', err);
+    } finally {
+      if (dom.cardLoadingSpinner) {
+        dom.cardLoadingSpinner.style.display = 'none';
+      }
+    }
+  }
+
   // Open "Explore All 5 Sotos" Modal
   function openAllSotosModal(highlightSotoId = null) {
     const isEn = state.lang === 'en';
@@ -682,6 +766,13 @@
   function closeAllModals() {
     sotoSound.playTap();
     state.inspectOpenedFromAllSotos = false;
+    if (dom.modalShareCard) {
+      dom.modalShareCard.classList.remove('active');
+      const cardSheet = dom.modalShareCard.querySelector('.modal-sheet');
+      const cardBody = dom.modalShareCard.querySelector('.modal-body');
+      if (cardSheet) cardSheet.scrollTop = 0;
+      if (cardBody) cardBody.scrollTop = 0;
+    }
     if (dom.modalSotoInspect) {
       dom.modalSotoInspect.classList.remove('active');
       const inspectSheet = dom.modalSotoInspect.querySelector('.modal-sheet');

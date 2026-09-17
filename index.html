@@ -181,14 +181,17 @@
 
         <!-- Action CTAs -->
         <div class="result-actions-grid">
-          <button id="retake-btn" class="btn-result-action btn-retake" type="button">
-            <span data-i18n="retakeBtn">重新測驗 ↺</span>
+          <button id="card-download-btn" class="btn-result-action btn-card-share" type="button">
+            <span data-i18n="saveCardBtn">📸 儲存分享圖卡</span>
           </button>
           <button id="share-btn" class="btn-result-action btn-share" type="button">
             <span data-i18n="shareBtn">分享測驗結果 📋</span>
           </button>
           <button id="explore-btn" class="btn-result-action btn-explore" type="button">
             <span data-i18n="exploreBtn">認識全部 5 款梭多 🗺️</span>
+          </button>
+          <button id="retake-btn" class="btn-result-action btn-retake" type="button">
+            <span data-i18n="retakeBtn">重新測驗 ↺</span>
           </button>
         </div>
 
@@ -263,6 +266,40 @@
     </div>
   </div>
 
+  <!-- Modal: Share Result Card -->
+  <div id="modal-share-card" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-card-title">
+    <div class="modal-sheet card-modal-sheet">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-card-title" class="modal-title" data-i18n="cardModalTitle">📸 你的專屬梭多圖卡</h3>
+          <p style="font-size:0.8rem; color:#6C584C;" data-i18n="cardModalSubtitle">保存專屬性格卡，分享到 Instagram、Line 或限時動態！</p>
+        </div>
+        <button id="close-card-btn" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body card-modal-body">
+        <div id="card-preview-container" class="card-preview-container">
+          <div id="card-loading-spinner" class="card-loading-spinner">
+            <span class="spinner-mascot">🍲</span>
+            <p data-i18n="generatingCard">正在烹煮製作精美圖卡...</p>
+          </div>
+          <img id="card-preview-img" class="card-preview-img" alt="Soto Personality Card" style="display:none;" />
+        </div>
+
+        <p class="mobile-save-hint" data-i18n="mobileSaveHint">💡 手機用戶亦可直接長按圖片「儲存至相片」！</p>
+
+        <!-- Card Action Buttons -->
+        <div class="card-modal-actions">
+          <button id="btn-download-png" class="btn-card-action btn-download-png" type="button">
+            <span data-i18n="downloadPngBtn">📥 下載 PNG 圖卡</span>
+          </button>
+          <button id="btn-share-native" class="btn-card-action btn-share-native" type="button">
+            <span data-i18n="shareCardNativeBtn">📤 分享圖卡與連結</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toast-msg" class="toast-msg" role="status" aria-live="polite" data-i18n="copiedToast"></div>
 
@@ -283,6 +320,7 @@
   <script src="illustrations.js"></script>
   <script src="sound.js"></script>
   <script src="confetti.js"></script>
+  <script src="share-card.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

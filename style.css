@@ -1081,11 +1081,30 @@ body {
   box-shadow: 0 1px 0 var(--color-charcoal);
 }
 
-.btn-retake {
+.btn-card-share {
   background: var(--color-turmeric);
   color: var(--color-charcoal);
+  font-size: 1.15rem;
+  font-weight: 800;
+  box-shadow: 0 5px 0 var(--color-charcoal);
+  animation: cardSharePulse 2.8s infinite ease-in-out;
 }
-.btn-retake:hover { background: #F3B330; }
+
+@keyframes cardSharePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.btn-card-share:hover {
+  background: #EEB336;
+  box-shadow: 0 6px 0 var(--color-charcoal);
+}
+
+.btn-retake {
+  background: #FFF8EB;
+  color: var(--color-charcoal);
+}
+.btn-retake:hover { background: #F8E8CD; }
 
 .btn-share {
   background: var(--color-terracotta);
@@ -1322,31 +1341,133 @@ body {
   border-radius: var(--border-radius-pill);
 }
 
-/* QR Code Modal Content */
-.qr-modal-body {
-  text-align: center;
-  padding: 28px 20px;
+/* Share Result Card Modal */
+.card-modal-sheet {
+  max-width: 480px;
 }
 
-.qr-code-mount {
+.card-modal-body {
+  padding: 16px 20px 22px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-preview-container {
+  width: 100%;
+  min-height: 380px;
+  background: #F4EBD9;
+  border: 2px dashed rgba(193, 80, 46, 0.35);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin: 16px 0;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
 }
 
-.qr-render-wrapper {
-  background: #FFF;
-  padding: 12px;
-  border-radius: 12px;
+.card-loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-maroon);
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+}
+
+.spinner-mascot {
+  font-size: 2.8rem;
+  display: inline-block;
+  animation: cardSoupSpin 1.2s infinite ease-in-out;
+}
+
+@keyframes cardSoupSpin {
+  0% { transform: rotate(-15deg) scale(0.9); }
+  50% { transform: rotate(15deg) scale(1.15); }
+  100% { transform: rotate(-15deg) scale(0.9); }
+}
+
+.card-preview-img {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(58, 46, 39, 0.22);
   border: 2px solid var(--color-charcoal);
-  box-shadow: 0 4px 0 var(--color-charcoal);
+  animation: cardFadeIn 0.35s ease-out;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
 }
 
-.qr-url-text {
-  font-size: 0.85rem;
-  color: #6C584C;
-  word-break: break-all;
-  margin-top: 10px;
+.card-preview-img:hover {
+  transform: scale(1.02);
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.mobile-save-hint {
+  font-size: 0.78rem;
+  color: #7A685D;
+  text-align: center;
+  margin: -2px 0 2px;
+}
+
+.card-modal-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-card-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: var(--border-radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  border: 2px solid var(--color-charcoal);
+  box-shadow: 0 3px 0 var(--color-charcoal);
+  transition: all var(--transition-fast);
+}
+
+.btn-download-png {
+  background: var(--color-turmeric);
+  color: var(--color-charcoal);
+}
+
+.btn-download-png:hover {
+  background: #E8AF35;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--color-charcoal);
+}
+
+.btn-share-native {
+  background: var(--color-terracotta);
+  color: #FFF;
+}
+
+.btn-share-native:hover {
+  background: #AF4323;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--color-charcoal);
+}
+
+.btn-card-action:active {
+  transform: translateY(2px);
+  box-shadow: none;
 }
 
 /* Toast Message */
