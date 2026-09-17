@@ -15,7 +15,8 @@
     currentQuestionIndex: 0,
     answers: new Array(8).fill(null),
     resultSotoId: null,
-    isAnimating: false
+    isAnimating: false,
+    inspectOpenedFromAllSotos: false
   };
 
   // DOM Elements Cache
@@ -125,11 +126,11 @@
 
     // Single Soto Inspect Modal Close & Actions
     if (dom.closeInspectBtn) {
-      dom.closeInspectBtn.addEventListener('click', closeModals);
+      dom.closeInspectBtn.addEventListener('click', handleCloseInspect);
     }
     if (dom.inspectStartQuizBtn) {
       dom.inspectStartQuizBtn.addEventListener('click', () => {
-        closeModals();
+        closeAllModals();
         startQuiz();
       });
     }
@@ -172,22 +173,35 @@
       sotoSound.playTap();
       openAllSotosModal();
     });
-    dom.closeAllSotosBtn.addEventListener('click', closeModals);
+    if (dom.closeAllSotosBtn) {
+      dom.closeAllSotosBtn.addEventListener('click', closeAllModals);
+    }
 
     // Modal backdrop clicks
-    [dom.modalSotoInspect, dom.modalAllSotos, dom.modalQR].forEach(modal => {
-      if (modal) {
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            closeModals();
-          }
-        });
-      }
-    });
+    if (dom.modalSotoInspect) {
+      dom.modalSotoInspect.addEventListener('click', (e) => {
+        if (e.target === dom.modalSotoInspect) {
+          handleCloseInspect();
+        }
+      });
+    }
+    if (dom.modalAllSotos) {
+      dom.modalAllSotos.addEventListener('click', (e) => {
+        if (e.target === dom.modalAllSotos) {
+          closeAllModals();
+        }
+      });
+    }
 
-    // Escape key closes modals
+    // Escape key closes active modal (returning back to All Sotos if in inspect modal)
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModals();
+      if (e.key === 'Escape') {
+        if (dom.modalSotoInspect && dom.modalSotoInspect.classList.contains('active')) {
+          handleCloseInspect();
+        } else if (dom.modalAllSotos && dom.modalAllSotos.classList.contains('active')) {
+          closeAllModals();
+        }
+      }
     });
   }
 
@@ -317,11 +331,20 @@
   }
 
   // Open the Single Soto Inspect & Secret Ingredients Modal
-  function openInspectModal(sotoId) {
+  function openInspectModal(sotoId, fromAllSotos = false) {
+    state.inspectOpenedFromAllSotos = Boolean(fromAllSotos);
     const soto = SOTO_DATA.personalities[sotoId];
     if (!soto) return;
 
     const isEn = state.lang === 'en';
+
+    if (dom.closeInspectBtn) {
+      const closeTitle = fromAllSotos
+        ? (isEn ? 'Back to all sotos ✕' : '返回梭多列表 ✕')
+        : (isEn ? 'Close ✕' : '關閉 ✕');
+      dom.closeInspectBtn.setAttribute('title', closeTitle);
+      dom.closeInspectBtn.setAttribute('aria-label', closeTitle);
+    }
 
     dom.modalInspectIllustration.innerHTML = SOTO_ILLUSTRATIONS.getCharacterSVG(sotoId, 160);
     dom.modalInspectName.textContent = isEn ? soto.nameEn : soto.nameZh;
@@ -619,8 +642,12 @@
       entry.style.cursor = 'pointer';
       entry.addEventListener('click', () => {
         const sotoId = entry.getAttribute('data-soto');
-        closeModals();
-        openInspectModal(sotoId);
+        sotoSound.playSelect();
+        // Hide All Sotos modal while preserving its scroll position
+        if (dom.modalAllSotos) {
+          dom.modalAllSotos.classList.remove('active');
+        }
+        openInspectModal(sotoId, true);
       });
     });
 
@@ -631,8 +658,30 @@
     if (allBody) allBody.scrollTop = 0;
   }
 
-  // Close all open modals
-  function closeModals() {
+  // Handle closing inspect modal (returns to All Sotos if opened from there)
+  function handleCloseInspect() {
+    sotoSound.playTap();
+    if (dom.modalSotoInspect) {
+      dom.modalSotoInspect.classList.remove('active');
+      const inspectSheet = dom.modalSotoInspect.querySelector('.modal-sheet');
+      const inspectBody = dom.modalSotoInspect.querySelector('.modal-body');
+      if (inspectSheet) inspectSheet.scrollTop = 0;
+      if (inspectBody) inspectBody.scrollTop = 0;
+    }
+
+    // If opened from All Sotos, return to All Sotos modal!
+    if (state.inspectOpenedFromAllSotos) {
+      state.inspectOpenedFromAllSotos = false;
+      if (dom.modalAllSotos) {
+        dom.modalAllSotos.classList.add('active');
+      }
+    }
+  }
+
+  // Close all open modals completely
+  function closeAllModals() {
+    sotoSound.playTap();
+    state.inspectOpenedFromAllSotos = false;
     if (dom.modalSotoInspect) {
       dom.modalSotoInspect.classList.remove('active');
       const inspectSheet = dom.modalSotoInspect.querySelector('.modal-sheet');
