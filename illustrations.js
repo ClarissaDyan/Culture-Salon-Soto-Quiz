@@ -2,34 +2,16 @@
  * Vector Illustrations & Animated SVGs for "Which Soto Are You?"
  * Duolingo-style cute flat vector aesthetics with thick clean lines,
  * expressive faces, distinct regional ingredients, and animated steam curls.
+ *
+ * NOTE: Avoids internal SVG filter and defs IDs to prevent Chrome/Safari
+ * disappearing element bugs caused by ID collisions or display:none containers.
  */
 
 const SOTO_ILLUSTRATIONS = {
-  // Helper for generating steam animation keyframes and paths
-  getSteamSVG(color = '#E3A426', count = 3) {
-    return `
-      <g class="soto-steam-group">
-        <path class="steam-line steam-1" d="M 85,55 C 80,40 92,30 86,15 C 82,5 88,0 86,-10" stroke="${color}" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.75" />
-        <path class="steam-line steam-2" d="M 100,50 C 95,35 107,25 101,10 C 97,0 103,-5 100,-15" stroke="${color}" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.85" />
-        <path class="steam-line steam-3" d="M 115,55 C 110,40 122,30 116,15 C 112,5 118,0 115,-10" stroke="${color}" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.7" />
-      </g>
-    `;
-  },
-
   // 1. Soto Ayam Lamongan (The Reliable Classic)
   getLamonganSVG(size = 200) {
     return `
     <svg class="soto-character soto-lamongan-svg" width="${size}" height="${size}" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="shadow-lamongan" x="-10%" y="-10%" width="120%" height="130%">
-          <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#7A2E2E" flood-opacity="0.15" />
-        </filter>
-        <radialGradient id="broth-lamongan" cx="50%" cy="40%" r="50%">
-          <stop offset="0%" stop-color="#FFDE59" />
-          <stop offset="100%" stop-color="#E3A426" />
-        </radialGradient>
-      </defs>
-
       <!-- Animated Steam -->
       <g class="steam-anim">
         <path class="steam-path s1" d="M85 50 C78 35 92 25 85 12" stroke="#E3A426" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.6"/>
@@ -37,16 +19,16 @@ const SOTO_ILLUSTRATIONS = {
         <path class="steam-path s3" d="M115 50 C108 35 122 25 115 12" stroke="#E3A426" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.6"/>
       </g>
 
-      <!-- Bowl Shadow -->
+      <!-- Bowl Ground Shadow -->
       <ellipse cx="100" cy="180" rx="65" ry="12" fill="#3A2E27" opacity="0.12" />
 
-      <!-- Bowl Outer Body -->
-      <g filter="url(#shadow-lamongan)">
+      <!-- Bowl Main Group (No SVG filter to guarantee 100% rendering reliability) -->
+      <g class="bowl-graphics">
         <!-- Spoon tucked on left -->
-        <path d="M55 90 C45 60 30 50 25 45 C22 43 25 40 28 42 C38 48 56 68 62 85 Z" fill="#E8EEF5" stroke="#2E4057" stroke-width="3" stroke-linejoin="round" />
-        <ellipse cx="27" cy="44" rx="8" ry="12" transform="rotate(-30 27 44)" fill="#E8EEF5" stroke="#2E4057" stroke-width="3" />
+        <path d="M55 90 C45 60 30 50 25 45 C22 43 25 40 28 42 C38 48 56 68 62 85 Z" fill="#E8EEF5" stroke="#2E4057" stroke-width="3.5" stroke-linejoin="round" />
+        <ellipse cx="27" cy="44" rx="8" ry="12" transform="rotate(-30 27 44)" fill="#E8EEF5" stroke="#2E4057" stroke-width="3.5" />
 
-        <!-- Main Bowl -->
+        <!-- Main Bowl Base -->
         <path d="M30 95 C30 150 60 175 100 175 C140 175 170 150 170 95 Z" fill="#FAF6EE" stroke="#3A2E27" stroke-width="5" stroke-linejoin="round"/>
         <!-- Bowl Rim Bottom Foot -->
         <rect x="75" y="172" width="50" height="8" rx="4" fill="#E3A426" stroke="#3A2E27" stroke-width="4"/>
@@ -54,13 +36,13 @@ const SOTO_ILLUSTRATIONS = {
         <!-- Turmeric Rim Accent Line -->
         <path d="M35 108 C55 120 145 120 165 108" stroke="#E3A426" stroke-width="4" stroke-linecap="round"/>
 
-        <!-- Broth Ellipse Interior -->
-        <ellipse cx="100" cy="95" rx="68" ry="24" fill="url(#broth-lamongan)" stroke="#3A2E27" stroke-width="5"/>
+        <!-- Broth Interior (Golden Turmeric Yellow) -->
+        <ellipse cx="100" cy="95" rx="68" ry="24" fill="#E3A426" stroke="#3A2E27" stroke-width="5"/>
+        <ellipse cx="98" cy="92" rx="58" ry="18" fill="#FFDE59"/>
         
-        <!-- Ingredients inside -->
         <!-- Glass noodles swirls -->
-        <path d="M55 92 C65 86 75 98 85 92 C95 86 105 96 115 90" stroke="#FFFDF9" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85"/>
-        <path d="M60 97 C70 91 80 102 92 97 C104 92 115 101 125 95" stroke="#FFFDF9" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.8"/>
+        <path d="M55 92 C65 86 75 98 85 92 C95 86 105 96 115 90" stroke="#FFFDF9" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.9"/>
+        <path d="M60 97 C70 91 80 102 92 97 C104 92 115 101 125 95" stroke="#FFFDF9" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.85"/>
         
         <!-- Shredded Chicken strips -->
         <rect x="68" y="85" width="22" height="7" rx="3.5" transform="rotate(-15 68 85)" fill="#FFF3D1" stroke="#3A2E27" stroke-width="2.5"/>
@@ -99,38 +81,29 @@ const SOTO_ILLUSTRATIONS = {
   getBetawiSVG(size = 200) {
     return `
     <svg class="soto-character soto-betawi-svg" width="${size}" height="${size}" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="shadow-betawi" x="-10%" y="-10%" width="120%" height="130%">
-          <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#7A2E2E" flood-opacity="0.15" />
-        </filter>
-        <radialGradient id="broth-betawi" cx="45%" cy="40%" r="55%">
-          <stop offset="0%" stop-color="#FFFDF0" />
-          <stop offset="60%" stop-color="#FCEECB" />
-          <stop offset="100%" stop-color="#EED596" />
-        </radialGradient>
-      </defs>
-
       <!-- Silky Steam -->
       <g class="steam-anim">
         <path class="steam-path s1" d="M82 48 C75 35 90 22 82 10" stroke="#E3A426" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.6"/>
-        <path class="steam-path s2" d="M100 42 C92 25 106 15 98 4" stroke="#FFF8E7" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.9"/>
+        <path class="steam-path s2" d="M100 42 C92 25 106 15 98 4" stroke="#E3A426" stroke-width="5.5" stroke-linecap="round" fill="none" opacity="0.8"/>
         <path class="steam-path s3" d="M118 48 C110 35 125 22 118 10" stroke="#E3A426" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.6"/>
       </g>
 
-      <!-- Bowl Shadow -->
+      <!-- Bowl Ground Shadow -->
       <ellipse cx="100" cy="180" rx="65" ry="12" fill="#3A2E27" opacity="0.12" />
 
-      <!-- Bowl Outer Body (Terracotta/Warm Pottery) -->
-      <g filter="url(#shadow-betawi)">
-        <!-- Rich Red Terracotta Bowl with cute handles -->
+      <!-- Bowl Main Group -->
+      <g class="bowl-graphics">
+        <!-- Rich Red Terracotta Handles -->
         <path d="M26 100 C20 100 15 110 18 120 C22 128 28 124 30 115" stroke="#3A2E27" stroke-width="4.5" stroke-linecap="round" fill="#C1502E"/>
         <path d="M174 100 C180 100 185 110 182 120 C178 128 172 124 170 115" stroke="#3A2E27" stroke-width="4.5" stroke-linecap="round" fill="#C1502E"/>
 
+        <!-- Main Bowl Outer Body -->
         <path d="M28 95 C28 152 60 176 100 176 C140 176 172 152 172 95 Z" fill="#FFFBF5" stroke="#3A2E27" stroke-width="5" stroke-linejoin="round"/>
         <rect x="74" y="173" width="52" height="8" rx="4" fill="#C1502E" stroke="#3A2E27" stroke-width="4"/>
         
         <!-- Cream / Coconut Broth Interior -->
-        <ellipse cx="100" cy="95" rx="70" ry="25" fill="url(#broth-betawi)" stroke="#3A2E27" stroke-width="5"/>
+        <ellipse cx="100" cy="95" rx="70" ry="25" fill="#EED596" stroke="#3A2E27" stroke-width="5"/>
+        <ellipse cx="98" cy="92" rx="60" ry="18" fill="#FFFDF0"/>
 
         <!-- Tender Beef Chunks -->
         <rect x="58" y="85" width="22" height="16" rx="5" transform="rotate(12 58 85)" fill="#6E2C18" stroke="#3A2E27" stroke-width="2.5"/>
@@ -172,31 +145,20 @@ const SOTO_ILLUSTRATIONS = {
   getPadangSVG(size = 200) {
     return `
     <svg class="soto-character soto-padang-svg" width="${size}" height="${size}" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="shadow-padang" x="-10%" y="-10%" width="120%" height="130%">
-          <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#7A2E2E" flood-opacity="0.15" />
-        </filter>
-        <radialGradient id="broth-padang" cx="50%" cy="40%" r="50%">
-          <stop offset="0%" stop-color="#E85D04" />
-          <stop offset="70%" stop-color="#C1502E" />
-          <stop offset="100%" stop-color="#7A2E2E" />
-        </radialGradient>
-      </defs>
-
       <!-- Fiery Wavy Steam -->
       <g class="steam-anim">
         <path class="steam-path s1" d="M84 46 C74 30 94 20 84 6" stroke="#C1502E" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.8"/>
         <path class="steam-path s2" d="M100 40 C90 22 110 12 100 0" stroke="#E85D04" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.9"/>
         <path class="steam-path s3" d="M116 46 C106 30 126 20 116 6" stroke="#C1502E" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.8"/>
-        <!-- Small Sparkle/Fire Star -->
+        <!-- Sparkle Star -->
         <path d="M135 30 L138 35 L143 38 L138 41 L135 46 L132 41 L127 38 L132 35 Z" fill="#E3A426"/>
       </g>
 
-      <!-- Bowl Shadow -->
+      <!-- Bowl Ground Shadow -->
       <ellipse cx="100" cy="180" rx="65" ry="12" fill="#3A2E27" opacity="0.12" />
 
-      <!-- Bowl Outer Body -->
-      <g filter="url(#shadow-padang)">
+      <!-- Bowl Main Group -->
+      <g class="bowl-graphics">
         <!-- Spicy Deep Bowl -->
         <path d="M28 95 C28 152 60 176 100 176 C140 176 172 152 172 95 Z" fill="#FAF4EB" stroke="#3A2E27" stroke-width="5" stroke-linejoin="round"/>
         <rect x="74" y="173" width="52" height="8" rx="4" fill="#7A2E2E" stroke="#3A2E27" stroke-width="4"/>
@@ -206,7 +168,8 @@ const SOTO_ILLUSTRATIONS = {
         <polygon points="150,110 158,118 142,118" fill="#C1502E"/>
 
         <!-- Deep Amber Spiced Broth -->
-        <ellipse cx="100" cy="95" rx="70" ry="25" fill="url(#broth-padang)" stroke="#3A2E27" stroke-width="5"/>
+        <ellipse cx="100" cy="95" rx="70" ry="25" fill="#7A2E2E" stroke="#3A2E27" stroke-width="5"/>
+        <ellipse cx="98" cy="92" rx="60" ry="18" fill="#C1502E"/>
 
         <!-- Crispy Deep-Fried Beef Dendeng (Textured dark crisps) -->
         <rect x="60" y="86" width="28" height="9" rx="3" transform="rotate(-18 60 86)" fill="#4A150D" stroke="#3A2E27" stroke-width="2.5"/>
@@ -240,17 +203,6 @@ const SOTO_ILLUSTRATIONS = {
   getBanjarSVG(size = 200) {
     return `
     <svg class="soto-character soto-banjar-svg" width="${size}" height="${size}" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="shadow-banjar" x="-10%" y="-10%" width="120%" height="130%">
-          <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#2E4057" flood-opacity="0.15" />
-        </filter>
-        <radialGradient id="broth-banjar" cx="50%" cy="40%" r="50%">
-          <stop offset="0%" stop-color="#FFEA85" />
-          <stop offset="70%" stop-color="#E5A93C" />
-          <stop offset="100%" stop-color="#BA781E" />
-        </radialGradient>
-      </defs>
-
       <!-- Fragrant Spice Steam -->
       <g class="steam-anim">
         <path class="steam-path s1" d="M85 46 C78 32 94 20 86 8" stroke="#2E4057" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.6"/>
@@ -261,11 +213,11 @@ const SOTO_ILLUSTRATIONS = {
         <circle cx="130" cy="26" r="2.5" fill="#BA781E"/>
       </g>
 
-      <!-- Bowl Shadow -->
+      <!-- Bowl Ground Shadow -->
       <ellipse cx="100" cy="180" rx="65" ry="12" fill="#3A2E27" opacity="0.12" />
 
-      <!-- Bowl Outer Body (Indigo/Refined Porcelain) -->
-      <g filter="url(#shadow-banjar)">
+      <!-- Bowl Main Group -->
+      <g class="bowl-graphics">
         <!-- Elegant Royal Porcelain Bowl -->
         <path d="M28 95 C28 152 60 176 100 176 C140 176 172 152 172 95 Z" fill="#F4F7FB" stroke="#2E4057" stroke-width="5" stroke-linejoin="round"/>
         <rect x="74" y="173" width="52" height="8" rx="4" fill="#2E4057" stroke="#2E4057" stroke-width="4"/>
@@ -274,7 +226,8 @@ const SOTO_ILLUSTRATIONS = {
         <path d="M38 108 Q100 128 162 108" stroke="#2E4057" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
 
         <!-- Fragrant Golden Spiced Broth -->
-        <ellipse cx="100" cy="95" rx="70" ry="25" fill="url(#broth-banjar)" stroke="#2E4057" stroke-width="5"/>
+        <ellipse cx="100" cy="95" rx="70" ry="25" fill="#BA781E" stroke="#2E4057" stroke-width="5"/>
+        <ellipse cx="98" cy="92" rx="60" ry="18" fill="#FFEA85"/>
 
         <!-- Halved Boiled Egg with perfect golden yolk -->
         <g transform="translate(56, 78) rotate(-10)">
@@ -316,17 +269,6 @@ const SOTO_ILLUSTRATIONS = {
   getMakassarSVG(size = 200) {
     return `
     <svg class="soto-character soto-makassar-svg" width="${size}" height="${size}" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="shadow-makassar" x="-10%" y="-10%" width="120%" height="130%">
-          <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#3A2E27" flood-opacity="0.2" />
-        </filter>
-        <radialGradient id="broth-makassar" cx="50%" cy="40%" r="50%">
-          <stop offset="0%" stop-color="#6F4E37" />
-          <stop offset="70%" stop-color="#4A2810" />
-          <stop offset="100%" stop-color="#2B1405" />
-        </radialGradient>
-      </defs>
-
       <!-- Intense Earthy Roasted Steam -->
       <g class="steam-anim">
         <path class="steam-path s1" d="M82 46 C72 30 92 20 82 6" stroke="#7A2E2E" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.75"/>
@@ -334,11 +276,11 @@ const SOTO_ILLUSTRATIONS = {
         <path class="steam-path s3" d="M118 46 C108 30 128 20 118 6" stroke="#7A2E2E" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.75"/>
       </g>
 
-      <!-- Bowl Shadow -->
+      <!-- Bowl Ground Shadow -->
       <ellipse cx="100" cy="180" rx="65" ry="12" fill="#3A2E27" opacity="0.12" />
 
-      <!-- Bowl Outer Body (Rustic Cast Iron / Dark Earthenware) -->
-      <g filter="url(#shadow-makassar)">
+      <!-- Bowl Main Group -->
+      <g class="bowl-graphics">
         <path d="M28 95 C28 152 60 176 100 176 C140 176 172 152 172 95 Z" fill="#3D2619" stroke="#1F120A" stroke-width="5" stroke-linejoin="round"/>
         <rect x="74" y="173" width="52" height="8" rx="4" fill="#7A2E2E" stroke="#1F120A" stroke-width="4"/>
         
@@ -346,7 +288,8 @@ const SOTO_ILLUSTRATIONS = {
         <path d="M38 106 Q100 122 162 106" stroke="#E3A426" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
 
         <!-- Dark Roasted Peanut Broth -->
-        <ellipse cx="100" cy="95" rx="70" ry="25" fill="url(#broth-makassar)" stroke="#1F120A" stroke-width="5"/>
+        <ellipse cx="100" cy="95" rx="70" ry="25" fill="#2B1405" stroke="#1F120A" stroke-width="5"/>
+        <ellipse cx="98" cy="92" rx="60" ry="18" fill="#5A341A"/>
 
         <!-- Hearty Braised Beef Chunks -->
         <rect x="62" y="86" width="22" height="15" rx="4" transform="rotate(15 62 86)" fill="#6F1D1B" stroke="#1F120A" stroke-width="2.5"/>
@@ -364,7 +307,7 @@ const SOTO_ILLUSTRATIONS = {
         <circle cx="112" cy="82" r="3" fill="#74C69D"/>
         <circle cx="106" cy="76" r="2.5" fill="#D4A373"/>
 
-        <!-- Ultra Cool Character: Badass Sunglasses! -->
+        <!-- Ultra Cool Character: Sunglasses! -->
         <!-- Sunglasses Frames -->
         <path d="M60 124 L92 124 L88 140 L64 140 Z" fill="#1A1A1A" stroke="#E3A426" stroke-width="2.5"/>
         <path d="M108 124 L140 124 L136 140 L112 140 Z" fill="#1A1A1A" stroke="#E3A426" stroke-width="2.5"/>
